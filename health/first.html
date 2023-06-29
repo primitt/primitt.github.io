@@ -13067,7 +13067,11 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 <script>
-    setTimeout(() => {
-        document.getElementById('fr1').innerHTML = "Nothing to see here yet...";
-    }, 1000)
+    $.ajax({
+        url: "https://primitt.dev/health/items.json",
+        dataType: "json",
+        success: function(data) {
+            console.log(data)
+        }
+    })
 </script>
