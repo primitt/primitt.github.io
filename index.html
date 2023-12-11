@@ -1,4 +1,9 @@
-<html data-theme="black" lang="en">
+<html
+  data-theme="black"
+  lang="en"
+  xml:lang="en"
+  xmlns="http://www.w3.org/1999/xhtml"
+>
   <head>
     <link
       href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.min.css"
@@ -12,24 +17,82 @@
       crossorigin="anonymous"
     />
     <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8" />
+    <meta name="google" content="notranslate" />
+    <meta http-equiv="Content-Language" content="en" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ayonull</title>
   </head>
+  <style>
+    .typing::after {
+      content: "|";
+      animation: blink 1s infinite;
+      margin-left: 3px;
+      display: inline-block;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+  </style>
   <body>
-    <div class="flex flex-wrap flex-row inline" style="margin: 20px">
+    <div class="flex flex-wrap flex-row inline gap-5" style="margin: 20px">
       <div class="card w-96 bg-base-200 shadow-xl">
         <div class="card-body">
           <p class="leading-3">Hi! I am</p>
           <div class="flex">
             <h2 class="text-4xl leading-5">
-              <span><b>ayonull</b></span>
+              <span
+                ><b><span id="usernames" class="typing inline-block"></span></b
+              ></span>
             </h2>
             &nbsp;<img src="./images/1f1fa-1f1f8.svg" width="30px" />
           </div>
-          <div class="flex">
-            <!-- create all socials icons -->
-            <i class="fab fa-github"></i>
+          <div class="flex gap-2 leading-6" style="margin-top: 8px">
+            <a href="https://github.com/primitt"
+              ><i class="fab fa-github"></i
+            ></a>
+          </div>
+        </div>
+      </div>
+      <div class="card w-96 bg-base-200 shadow-xl">
+        <div class="card-body">
+          <div class="card-body text-center">
+            <p>Site is being constructed... slowly...</p>
           </div>
         </div>
       </div>
     </div>
   </body>
+  <script>
+    const phrases = ["primitt", "ayonull"];
+    let phraseIndex = 0;
+    let charIndex = 0;
+    const usernames = document.getElementById("usernames");
+
+    function typePhrase() {
+      if (charIndex < phrases[phraseIndex].length) {
+        usernames.innerHTML += phrases[phraseIndex].charAt(charIndex);
+        charIndex++;
+        setTimeout(typePhrase, 100);
+      } else {
+        setTimeout(deletePhrase, 4000);
+      }
+    }
+
+    function deletePhrase() {
+      if (charIndex > 0) {
+        usernames.innerHTML = usernames.innerHTML.slice(0, -1);
+        charIndex--;
+        setTimeout(deletePhrase, 100);
+      } else {
+        phraseIndex = (phraseIndex + 1) % phrases.length;
+        setTimeout(typePhrase, 500);
+      }
+    }
+
+    typePhrase();
+  </script>
 </html>
