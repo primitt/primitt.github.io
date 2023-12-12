@@ -16,6 +16,11 @@
       integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
       crossorigin="anonymous"
     />
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"
+    ></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <meta charset="UTF-8" />
     <meta name="google" content="notranslate" />
@@ -44,10 +49,30 @@
       style="margin: 20px"
     >
       <div>
-        <div
-          class="card w-96 bg-base-200 shadow-xl"
-          style=""
-        >
+        <div role="tablist" class="tabs tabs-lifted">
+          <a
+            role="tab"
+            class="tab tab-active"
+            id="home"
+            onclick="changePage('home')"
+            >Me</a
+          >
+          <a
+            role="tab"
+            class="tab"
+            id="projects"
+            onclick="changePage('projects')"
+            >Projects</a
+          >
+          <a
+            role="tab"
+            class="tab"
+            id="languages"
+            onclick="changePage('languages')"
+            >Languages</a
+          >
+        </div>
+        <div class="card w-96 bg-base-200 shadow-xl" style="" id="homepage">
           <div class="card-body">
             <p class="leading-3">Hi! I am</p>
             <div class="flex">
@@ -72,39 +97,32 @@
             </div>
           </div>
         </div>
-        <!-- <div class="card w-96 bg-base-200 h-full shadow-xl">
+        <div class="hidden card w-96 bg-base-200 shadow-xl" id="projectspage">
           <div class="card-body">
-            <div class="card-title">
-              <p class="text-2xl font-bold">Languages</p>
-              <p>I know</p>
+            <div class="card-title text-2xl font-bold">
+              <p>Projects</p>
+            </div>
+            <div class="flex">
+              <a class="underline bold font-bold" href="https://anical.co"
+                >anical.co</a
+              >&nbsp;-<span>
+                &nbsp;A lightweight ICS calendar for anime releases
+                <span class="text-gray-500">2023</span> </span
+              ><br />
+            </div>
+            <div class="flex">
+              <a class="bold font-bold">cdn.primitt.dev</a>&nbsp;-<span>
+                &nbsp;A Content Delivery Network with integration into ShareX
+                <span class="text-gray-500">2023</span> </span
+              ><br />
             </div>
           </div>
-        </div> -->
-        <!-- <div class="card w-96 bg-base-200 h-full shadow-xl">
-        <div class="card-body">
-          <div class="card-title text-2xl font-bold">
-            <p>Projects</p>
-          </div>
-          <div class="flex">
-            <a class="underline bold font-bold" href="https://anical.co"
-              >anical.co</a
-            >&nbsp;-<span>
-              &nbsp;A lightweight ICS calendar for anime releases
-              <span class="text-gray-500">2023</span> </span
-            ><br />
-          </div>
-          <div class="flex">
-            <a class="bold font-bold">cdn.primitt.dev</a>&nbsp;-<span>
-              &nbsp;A Content Delivery Network with integration into ShareX 
-              <span class="text-gray-500">2023</span> </span
-            ><br />
-          </div>
         </div>
-      </div> -->
       </div>
     </div>
   </body>
   <script>
+    // This code is sadly not mine. I have no idea where I got this from (I got this from another project of mine), but it's not mine. So... credit to whoever made this, thank u, love u <3!
     const phrases = ["primitt", "ayonull"];
     let phraseIndex = 0;
     let charIndex = 0;
@@ -130,7 +148,33 @@
         setTimeout(typePhrase, 500);
       }
     }
-
     typePhrase();
+
+    // this code is mine tho
+
+    function changePage(page) {
+      if (page == "home") {
+        document.getElementById("home").classList.add("tab-active");
+        document.getElementById("projects").classList.remove("tab-active");
+        document.getElementById("languages").classList.remove("tab-active");
+        document.getElementById("homepage").classList.remove("hidden");
+        document.getElementById("projectspage").classList.add("hidden");
+        // document.getElementById("languagespage").classList.add("hidden");
+      } else if (page == "projects") {
+        document.getElementById("home").classList.remove("tab-active");
+        document.getElementById("projects").classList.add("tab-active");
+        document.getElementById("languages").classList.remove("tab-active");
+        document.getElementById("homepage").classList.add("hidden");
+        document.getElementById("projectspage").classList.remove("hidden");
+        // document.getElementById("languagespage").classList.add("hidden");
+      } else if (page == "languages") {
+        document.getElementById("home").classList.remove("tab-active");
+        document.getElementById("projects").classList.remove("tab-active");
+        document.getElementById("languages").classList.add("tab-active");
+        document.getElementById("homepage").classList.add("hidden");
+        document.getElementById("projectspage").classList.add("hidden");
+        // document.getElementById("languagespage").classList.remove("hidden");
+      }
+    }
   </script>
 </html>
