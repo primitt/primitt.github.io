@@ -45,7 +45,7 @@
   </style>
   <body>
     <div
-      class="flex flex-wrap flex-row gap-5 lg:items-center justify-center h-screen"
+      class="flex flex-wrap flex-row gap-5 lg:items-center justify-center h-screen w-full"
       style="margin: 30px"
     >
       <div>
@@ -71,8 +71,15 @@
             onclick="changePage('languages')"
             >Languages</a
           >
+          <a
+            role="tab"
+            class="tab"
+            id="languages"
+            onclick="changePage('languages')"
+            >More....</a
+          >
         </div>
-        <div class="card w-96 bg-base-200 shadow-xl" id="homepage">
+        <div class="card bg-base-200 shadow-xl" id="homepage" style="width:390px;">
           <div class="card-body">
             <p class="leading-3">Hi! I am</p>
             <div class="flex">
@@ -97,7 +104,7 @@
             </div>
           </div>
         </div>
-        <div class="hidden card w-96 bg-base-200 shadow-xl" id="projectspage">
+        <div class="hidden card bg-base-200 shadow-xl" id="projectspage" style="width:390px;">
           <div class="card-body">
             <div class="card-title text-2xl font-bold">
               <p>Projects</p>
