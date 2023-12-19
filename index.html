@@ -21,6 +21,7 @@
       integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
       crossorigin="anonymous"
     ></script>
+    <script src="./scripts/particles.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <meta charset="UTF-8" />
     <meta name="google" content="notranslate" />
@@ -42,13 +43,17 @@
         opacity: 0;
       }
     }
+    .background {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
   </style>
   <body>
-    <div
-      class="flex flex-wrap flex-row gap-5 lg:items-center justify-center h-screen mx-5"
-    >
-      <div>
-        <div role="tablist" class="tabs tabs-lifted">
+    <div id="particles-js" class="background"></div>
+    <div class="flex gap-5 lg:items-center justify-center h-screen mx-5">
+      <!-- <div role="tablist" class="tabs tabs-lifted tabs-boxed">
           <a
             role="tab"
             class="tab tab-active"
@@ -65,63 +70,60 @@
           >
           <a
             role="tab"
-            class="tab"
+            class="tab hidden"
             id="languages"
             onclick="changePage('languages')"
             >Languages</a
           >
-          <a
-            role="tab"
-            class="tab"
-            id="languages"
-            onclick="changePage('more')"
+          <a role="tab" class="tab hidden" id="languages" onclick="changePage('more')"
             >More</a
           >
-        </div>
-        <div class="card w-96 bg-base-200 shadow-xl" id="homepage">
-          <div class="card-body">
-            <p class="leading-3">Hi! I am</p>
-            <div class="flex">
-              <h2 class="text-4xl leading-7">
-                <span
-                  ><b
-                    ><span id="usernames" class="typing inline-block"></span></b
-                ></span>
-              </h2>
-              &nbsp;<img src="./images/1f1fa-1f1f8.svg" width="30px" />
-            </div>
-            <div class="flex gap-2 leading-6 text-xl" style="margin-top: 8px">
-              <a href="https://github.com/primitt"
-                ><i class="fab fa-github"></i
-              ></a>
-              <a href="https://twitter.com/primitt"
-                ><i class="fab fa-twitter"></i
-              ></a>
-              <a href="https://discord.gg/9W9GYKnR"
-                ><i class="fab fa-discord"></i
-              ></a>
-            </div>
+        </div> -->
+      <div class="card w-96 bg-base-200 shadow-xl" id="homepage">
+        <div class="card-body">
+          <p class="leading-3">Hi! I am</p>
+          <div class="flex">
+            <h2 class="text-4xl leading-7">
+              <span
+                ><b><span id="usernames" class="typing inline-block"></span></b
+              ></span>
+            </h2>
+            &nbsp;<img src="./images/1f1fa-1f1f8.svg" width="30px" />
+          </div>
+          <div class="flex gap-2 leading-6 text-xl" style="margin-top: 8px">
+            <a href="https://github.com/primitt"
+              ><i class="fab fa-github"></i
+            ></a>
+            <a href="https://twitter.com/primitt"
+              ><i class="fab fa-twitter"></i
+            ></a>
+            <a href="https://discord.gg/9W9GYKnR"
+              ><i class="fab fa-discord"></i
+            ></a>
+            <a href="https://anilist.co/user/primitt">
+              <span><img src="./images/anilist.svg" width="20px" /></span>
+            </a>
           </div>
         </div>
-        <div class="hidden card w-96 bg-base-200 shadow-xl" id="projectspage">
-          <div class="card-body">
-            <div class="card-title text-2xl font-bold">
-              <p>Projects</p>
-            </div>
-            <div class="flex">
-              <a class="underline bold font-bold" href="https://anical.co"
-                >anical.co</a
-              >&nbsp;-<span>
-                &nbsp;A lightweight ICS calendar for anime releases
-                <span class="text-gray-500">2023</span> </span
-              ><br />
-            </div>
-            <div class="flex">
-              <a class="bold font-bold">cdn.primitt.dev</a>&nbsp;-<span>
-                &nbsp;A Content Delivery Network with integration into ShareX
-                <span class="text-gray-500">2023</span> </span
-              ><br />
-            </div>
+      </div>
+      <div class="card w-96 bg-base-200 shadow-xl" id="projectspage">
+        <div class="card-body">
+          <div class="card-title text-2xl font-bold">
+            <p>Projects</p>
+          </div>
+          <div class="flex">
+            <a class="underline bold font-bold" href="https://anical.co"
+              >anical.co</a
+            >&nbsp;-<span>
+              &nbsp;A lightweight ICS calendar for anime releases
+              <span class="text-gray-500">2023</span> </span
+            ><br />
+          </div>
+          <div class="flex">
+            <a class="bold font-bold">cdn.primitt.dev</a>&nbsp;-<span>
+              &nbsp;A Content Delivery Network with integration into ShareX
+              <span class="text-gray-500">2023</span> </span
+            ><br />
           </div>
         </div>
       </div>
@@ -182,5 +184,8 @@
         // document.getElementById("languagespage").classList.remove("hidden");
       }
     }
+    particlesJS.load("particles-js", "scripts/particles.json", function () {
+      console.log("callback - particles.js config loaded");
+    });
   </script>
 </html>
