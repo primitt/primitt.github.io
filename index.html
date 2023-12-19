@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html
   data-theme="black"
   lang="en"
@@ -26,30 +27,29 @@
     <meta charset="UTF-8" />
     <meta name="google" content="notranslate" />
     <!-- FIXME: remove above line after box 2 completion -->
-    <meta http-equiv="Content-Language" content="en" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ayonull</title>
-  </head>
-  <style>
-    .typing::after {
-      content: "|";
-      animation: blink 1s infinite;
-      margin-left: 3px;
-      display: inline-block;
-    }
-
-    @keyframes blink {
-      50% {
-        opacity: 0;
+    <style>
+      .typing::after {
+        content: "|";
+        animation: blink 1s infinite;
+        margin-left: 3px;
+        display: inline-block;
       }
-    }
-    .background {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-    }
-  </style>
+  
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+      .background {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
+    </style>
+  </head>
   <body>
     <div id="particles-js" class="background"></div>
     <div class="flex flex-wrap lg:items-center md:items-center justify-center lg:h-screen md:h-screen">
