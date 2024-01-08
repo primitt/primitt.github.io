@@ -55,10 +55,7 @@
     <div
       class="flex flex-wrap items-start mx-5 sm:mx-0 justify-center lg:h-screen md:h-screen content-center gap-5"
     >
-      <div
-        class="card w-96 bg-base-200 shadow-xl mt-5 sm:mt-0"
-        id="homepage"
-      >
+      <div class="card w-96 bg-base-200 shadow-xl mt-5 sm:mt-0" id="homepage">
         <div class="card-body">
           <p class="leading-3">Hi! I am</p>
           <div class="flex">
@@ -85,47 +82,128 @@
           </div>
         </div>
       </div>
-      <div
-        class="card w-96 bg-base-200 shadow-xl"
-        id="projectspage"
-      >
+      <div class="card w-96 bg-base-200 shadow-xl" id="projectspage">
         <div class="card-body">
           <div class="card-title text-2xl font-bold">
             <p>Projects</p>
           </div>
           <div class="flex">
+            <a
+              ><div class="avatar">
+                <div class="h-6 rounded-full">
+                  <img id="ayonullpfp-1" />
+                </div>
+                &nbsp;
+              </div></a
+            >
             <a class="underline bold font-bold" href="https://anical.co"
               >anical.co</a
             >&nbsp;-<span>
               &nbsp;A lightweight ICS calendar for anime releases
-              <br><span class="text-gray-500">2023 <div class="badge badge-success">active</div></span> </span
+              <br /><span class="text-gray-500"
+                >2023
+                <div class="badge badge-success">active</div></span
+              > </span
             ><br />
           </div>
           <div class="flex">
+            <a
+              ><div class="avatar">
+                <div class="h-6 rounded-full">
+                  <img id="ayonullpfp-1" />
+                </div>
+                &nbsp;
+              </div></a
+            >
             <a class="bold font-bold">cdn.primitt.dev</a>&nbsp;-<span>
               &nbsp;A Content Delivery Network with integration into ShareX
-              <br><span class="text-gray-500">2023 <div class="badge badge-success">active</div></span> </span
+              <br /><span class="text-gray-500"
+                >2023
+                <div class="badge badge-success">active</div></span
+              > </span
             ><br />
           </div>
           <div class="flex">
+            <a
+              ><div class="avatar">
+                <div class="h-6 rounded-full">
+                  <img id="ayonullpfp-1" />
+                </div>
+                &nbsp;
+              </div></a
+            >
             <a class="bold font-bold">tinygitter</a>&nbsp;-<span>
               &nbsp;Very tiny remake in Python of Github Desktop for the RPi
-              <br><span class="text-gray-500">2023 <div class="badge badge-success">working</div></span> </span
+              <br /><span class="text-gray-500"
+                >2023
+                <div class="badge badge-success">working</div></span
+              > </span
             ><br />
           </div>
           <div class="flex">
-            <a class="bold font-bold">eagler.nully.tech</a>&nbsp;-<span>
+            <a
+              ><div class="avatar">
+                <div class="h-6 rounded-full">
+                  <img id="ayonullpfp-1" />
+                </div>
+                &nbsp;
+              </div></a
+            >
+            <a class="bold font-bold">EaglerFAQ</a>&nbsp;-<span>
               &nbsp;A FAQ and Server-Listing site for the minecraft port of
               "eaglercraft"
-              <br><span class="text-gray-500">Feb, 2022 - Nov, 2022 <div class="badge badge-neutral">inactive</div></span> </span
+              <br /><span class="text-gray-500"
+                >Feb, 2022 - Nov, 2022
+                <div class="badge badge-neutral">inactive</div></span
+              > </span
+            ><br />
+          </div>
+          <div class="flex">
+            <div>
+            <a
+              ><div class="avatar">
+                <div class="h-6 rounded-full">
+                  <img id="ayonullpfp-1" />
+                </div>
+                &nbsp;
+              </div></a
+            >
+            <a
+              ><div class="avatar">
+                <div class="h-6 rounded-full">
+                  <img id="hwahpfp" />
+                </div>
+                &nbsp;
+              </div></a
+            >
+            <a
+              ><div class="avatar">
+                <div class="h-6 rounded-full">
+                  <img id="bongocatpfp" />
+                </div>
+                &nbsp;
+              </div></a
+            >
+            <a
+              ><div class="avatar">
+                <div class="h-6 rounded-full">
+                  <img id="sebbypfp" />
+                </div>
+                &nbsp;
+              </div></a
+            >
+          </div>
+            <a class="bold font-bold">submate</a>&nbsp;-<span>
+              &nbsp;An AI Detector for student assignment submissions.
+              <br /><span class="text-gray-500"
+                >June, 2023 - Sep, 2023
+                <div class="badge badge-neutral">inactive</div></span
+              > </span
             ><br />
           </div>
         </div>
       </div>
-      <div
-        class="card w-96 bg-base-200 shadow-xl"
-        id="projectspage"
-      >
+      <div class="card w-96 bg-base-200 shadow-xl" id="projectspage">
         <div class="card-body">
           <div class="card-title text-2xl font-bold">
             <p>Languages</p>
@@ -203,6 +281,18 @@
     }
     particlesJS.load("particles-js", "scripts/particles.json", function () {
       console.log("callback - particles.js config loaded");
+    });
+    $.getJSON("https://api.github.com/users/primitt", function (data) {
+      $("[id='ayonullpfp-1']").attr("src", data.avatar_url);
+    });
+    $.getJSON("https://api.github.com/users/heckerwithahat", function (data) {
+      $("[id='hwahpfp']").attr("src", data.avatar_url);
+    });
+    $.getJSON("https://api.github.com/users/fangoboyo", function (data) {
+      $("[id='bongocatpfp']").attr("src", data.avatar_url);
+    });
+    $.getJSON("https://api.github.com/users/Sebastian-Alexis", function (data) {
+      $("[id='sebbypfp']").attr("src", data.avatar_url);
     });
   </script>
 </html>
