@@ -17,4 +17,4 @@ def scripts(name):
     return send_from_directory('scripts', name)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5003)
+    app.run(port=5003)
