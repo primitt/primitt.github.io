@@ -1,5 +1,5 @@
 from flask import Flask, render_template, send_from_directory
-
+from models.model import *
 app = Flask(__name__)
 maintainance = True
 
@@ -9,6 +9,9 @@ def index():
         return render_template('construction.html')
     else:
         return render_template('index.html')
+    
+
+# Load API's
 @app.route('/images/<name>')
 def images(name):
     return send_from_directory('templates/images', name)
