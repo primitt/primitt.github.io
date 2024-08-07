@@ -1,1 +1,1 @@
-web: flask --app main run --port $PORT
+web: gunicorn hello:app -p $PORT
