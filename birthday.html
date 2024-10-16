@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sixtyfour+Convergence&display=swap" rel="stylesheet">
+</head>
+<style>
+    .sixtyfour-convergence {
+        font-family: "Sixtyfour Convergence", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+        font-variation-settings:
+            "BLED" 0,
+            "SCAN" 0,
+            "XELA" 0,
+            "YELA" 0;
+    }
+</style>
+
+<body class="sixtyfour-convergence" style="background-color:black;">
+    <!-- make a big stop watch in the middle like HH:MM:SS and it should encompass the entire page -->
+
+    <div id="stopwatch" style="font-size: 200px; text-align: center; margin-top: 22%; color:white;">
+        <span id="hours">00</span>:<span id="minutes">00</span>:<span id="seconds">00</span>
+        <br>
+        <span style="font-size:40px;">Minutes Left Till 16</span>
+    </div>
+
+</body>
+
+<script>
+    // get seconds till october 16, 2024 at 8 am
+    var dateOf16 = new Date("October 16, 2024 08:00:00").getTime();
+
+    // update the time every second
+    setInterval(function() {
+        var secondsUntil16 = Math.floor((dateOf16 - new Date().getTime()) / 1000);
+        // convert to HH:MM:SS
+        var hours = Math.floor(secondsUntil16 / 3600);
+        var minutes = Math.floor((secondsUntil16 % 3600) / 60);
+        var seconds = secondsUntil16 % 60;
+        hours = Math.floor(secondsUntil16 / 3600);
+        minutes = Math.floor((secondsUntil16 % 3600) / 60);
+        seconds = secondsUntil16 % 60;
+        document.getElementById("hours").innerText = hours.toString().padStart(2, "0");
+        document.getElementById("minutes").innerText = minutes.toString().padStart(2, "0");
+        document.getElementById("seconds").innerText = seconds.toString().padStart(2, "0");
+    }, 1000);
+</script>
+
+</html>
