@@ -38,7 +38,7 @@ async def projects(interaction):
         f"{p.id}. {p.name} ({p.date}): {p.description or 'No description'}, {p.status}, {p.link or 'No link'}"
         for p in all_projects
     ])
-    await interaction.response.send_message(f"**Projects:**\n{response}")
+    await interaction.response.send_message(f"```Projects: \n{response}```")
 
 
 @bot.slash_command(name="create_project", description="Create a new project")
@@ -122,7 +122,7 @@ async def blogs(interaction):
         return
 
     response = "\n".join([f"{b.id}: {b.title} ({b.date})" for b in all_blogs])
-    await interaction.response.send_message(f"**Blogs:**\n{response}")
+    await interaction.response.send_message(f"```Blogs:\n{response}```")
 
 
 
@@ -131,16 +131,34 @@ async def create_blog(
     interaction,
     title: str,
     content: str = None,
-    hero_image: str = None
+    hero_image: str = None,
+    file: nextcord.Attachment = None
 ):
+    # If no content is provided but a file is uploaded, use file content
+    if content is None and file:
+        try:
+            # Read the file content as text
+            file_content = await file.read()
+            content = file_content.decode('utf-8')
+                
+        except UnicodeDecodeError:
+            await interaction.response.send_message("Error: Could not read file as text. Please ensure the file is a text file.")
+            return
+        except Exception as e:
+            await interaction.response.send_message(f"Error reading file: {str(e)}")
+            return
+    
     date = datetime.datetime.now().strftime("%Y-%m-%d")
     blog = Blogs.create(
         date=date,
         title=title,
         content=content,
-        hero_image=hero_image
+        hero_image=hero_image,
+        writer=interaction.user.name
     )
-    await interaction.response.send_message(f"Blog created: {blog.id} - {blog.title}")
+    
+    file_info = f" (with file: {file.filename})" if file else ""
+    await interaction.response.send_message(f"Blog created: {blog.id} - {blog.title}{file_info}")
 
 
 
@@ -150,12 +168,27 @@ async def edit_blog(
     blog_id: int,
     title: str = None,
     content: str = None,
-    hero_image: str = None
+    hero_image: str = None,
+    file: nextcord.Attachment = None
 ):
     blog = Blogs.get_or_none(Blogs.id == blog_id)
     if not blog:
         await interaction.response.send_message(f"Blog with ID {blog_id} not found.")
         return
+
+    # If no content is provided but a file is uploaded, use file content
+    if content is None and file:
+        try:
+            # Read the file content as text
+            file_content = await file.read()
+            content = file_content.decode('utf-8')
+                
+        except UnicodeDecodeError:
+            await interaction.response.send_message("Error: Could not read file as text. Please ensure the file is a text file.")
+            return
+        except Exception as e:
+            await interaction.response.send_message(f"Error reading file: {str(e)}")
+            return
 
     if title:
         blog.title = title
@@ -165,7 +198,9 @@ async def edit_blog(
         blog.hero_image = hero_image
 
     blog.save()
-    await interaction.response.send_message(f"Blog {blog_id} updated successfully.")
+    
+    file_info = f" (with file: {file.filename})" if file and content else ""
+    await interaction.response.send_message(f"Blog {blog_id} updated successfully.{file_info}")
 
 
 @bot.slash_command(name="delete_blog", description="Delete a blog by ID")

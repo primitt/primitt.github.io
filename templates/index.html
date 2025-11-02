@@ -37,20 +37,16 @@
 
   /* Windows-style window controls */
   .window-control {
-    transition: all 0.2s ease;
+    transition: all 0.1s ease;
   }
 
   .window-control:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
   }
 
-  /* Card hover effects */
-  .project-card {
-    transition: all 0.3s ease;
-  }
-
-  .project-card:hover {
-    transform: translateY(-2px);
+  /* Simplified card hover effects */
+  .card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 
   /* Custom scrollbar for Windows feel */
@@ -329,15 +325,14 @@
         <div class="max-w-6xl mx-auto">
           <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
             {% for project in projects %}
-            <div
-              class="card bg-base-300 shadow-lg border border-gray-600 hover:shadow-xl transition-shadow duration-200">
+            <div class="card bg-base-300 shadow-lg border border-gray-600 hover:shadow-xl transition-shadow duration-200">
               <div class="card-body p-4">
                 <div class="flex items-start justify-between mb-3">
                   <h3 class="font-bold text-lg text-white">{{ project.name }}</h3>
                   <div class="text-right text-xs text-gray-400">{{ project.date }}</div>
                 </div>
 
-                <p class="text-gray-300 text-sm mb-3 line-clamp-3">{{ project.description }}</p>
+                <p class="text-gray-300 text-sm mb-3">{{ project.description }}</p>
 
                 <div class="flex items-center justify-between">
                   <div>
@@ -369,7 +364,7 @@
                     {% endif %}
                   </div>
                   {% if project.link %}
-                  <a href="{{ project.link }}" class="btn btn-ghost btn-xs text-gray-400 hover:text-white">
+                  <a href="{{ project.link }}" target="_blank" class="btn btn-ghost btn-xs text-gray-400 hover:text-white">
                     <i class="fas fa-external-link-alt"></i>
                   </a>
                   {% endif %}
@@ -384,9 +379,12 @@
   </div>
 
   <script>
+    // Simplified toggle functions without animations
     function toggleProjectsExpand() {
       const expanded = document.getElementById('projectspage-expanded');
-      if (expanded.classList.contains('hidden')) {
+      const isHidden = expanded.classList.contains('hidden');
+      
+      if (isHidden) {
         expanded.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
       } else {
@@ -397,7 +395,9 @@
 
     function toggleBlogsExpand() {
       const expanded = document.getElementById('blogspage-expanded');
-      if (expanded.classList.contains('hidden')) {
+      const isHidden = expanded.classList.contains('hidden');
+      
+      if (isHidden) {
         expanded.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
       } else {
@@ -465,19 +465,6 @@
   particlesJS.load("particles-js", "scripts/particles.json", function () {
     console.log("callback - particles.js config loaded");
   });
-  $.getJSON("https://api.github.com/users/primitt", function (data) {
-    $("[id='ayonullpfp-1']").attr("src", data.avatar_url);
-  });
-  $.getJSON("https://api.github.com/users/heckerwithahat", function (data) {
-    $("[id='hwahpfp']").attr("src", data.avatar_url);
-  });
-  $.getJSON("https://api.github.com/users/fangoboyo", function (data) {
-    $("[id='bongocatpfp']").attr("src", data.avatar_url);
-  });
-  $.getJSON("https://api.github.com/users/Sebastian-Alexis", function (data) {
-    $("[id='sebbypfp']").attr("src", data.avatar_url);
-  });
-
   // Spotify Integration
   function updateSpotifyStatus() {
     fetch('/api/spotify/current-track')

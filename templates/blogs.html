@@ -1,0 +1,408 @@
+<html data-theme="black" lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.7/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="/scripts/particles.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8" />
+    <meta name="google" content="notranslate" />
+    <meta http-equiv="Content-Language" content="en" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ blog.title or 'Blog Post' }} - ayonull</title>
+
+    <meta property="og:title" content="{{ blog.title or 'Blog Post' }}" />
+    <meta property="og:description"
+        content="{% if blog.content %}{{ blog.content | striptags | truncate(200) }}{% else %}A blog post by {{ blog.writer or 'ayonull' }}{% endif %}" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="{{ request.url }}" />
+    {% if blog.hero_image %}
+    <meta property="og:image" content="{{ blog.hero_image }}" />
+    <meta property="og:image:alt" content="{{ blog.title or 'Blog Hero Image' }}" />
+    {% else %}
+    {% endif %}
+    <meta property="og:site_name" content="ayonull" />
+    <!-- Article Meta Tags -->
+    <meta property="article:author" content="{{ blog.writer or 'ayonull' }}" />
+    <meta property="article:published_time" content="{{ blog.date }}T00:00:00Z" />
+    <meta property="article:section" content="Blog" />
+
+    <!-- Additional SEO Meta Tags -->
+    <meta name="description"
+        content="{% if blog.content %}{{ blog.content | striptags | truncate(160) }}{% else %}A blog post by {{ blog.writer or 'ayonull' }}{% endif %}" />
+    <meta name="author" content="{{ blog.writer or 'ayonull' }}" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#1f2937" />
+</head>
+<style>
+    .typing::after {
+        content: "|";
+        animation: blink 1s infinite;
+        margin-left: 3px;
+        display: inline-block;
+    }
+
+    @keyframes blink {
+        50% {
+            opacity: 0;
+        }
+    }
+
+    .background {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+    }
+
+    /* Windows-style window controls */
+    .window-control {
+        transition: all 0.1s ease;
+    }
+
+    .window-control:hover {
+        transform: scale(1.05);
+    }
+
+    /* Simplified card hover effects */
+    .card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Custom scrollbar for Windows feel */
+    .overflow-auto::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    .overflow-auto::-webkit-scrollbar-track {
+        background: #1f2937;
+        border-radius: 6px;
+    }
+
+    .overflow-auto::-webkit-scrollbar-thumb {
+        background: #4b5563;
+        border-radius: 6px;
+        border: 2px solid #1f2937;
+    }
+
+    .overflow-auto::-webkit-scrollbar-thumb:hover {
+        background: #6b7280;
+    }
+
+    /* Blog card specific styles - matching index.html style */
+    .blog-card-container {
+        width: 95%;
+        min-height: 95vh;
+        max-width: 1200px;
+    }
+
+    .blog-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin: 1rem 0;
+    }
+
+    .blog-meta {
+        font-size: 0.875rem;
+    }
+
+    .hero-image-container {
+        max-height: 400px;
+        overflow: hidden;
+        border-radius: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-image {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    /* Markdown content styling */
+    .blog-content h1 {
+        color: white;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 2rem 0 1rem 0;
+        line-height: 1.2;
+        border-bottom: 2px solid #4a5568;
+        padding-bottom: 0.5rem;
+    }
+
+    .blog-content h2 {
+        color: white;
+        font-size: 2rem;
+        font-weight: 600;
+        margin: 1.5rem 0 1rem 0;
+        line-height: 1.3;
+    }
+
+    .blog-content h3 {
+        color: white;
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin: 1.25rem 0 0.75rem 0;
+        line-height: 1.4;
+    }
+
+    .blog-content h4 {
+        color: white;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 1rem 0 0.5rem 0;
+        line-height: 1.4;
+    }
+
+    .blog-content h5 {
+        color: white;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 1rem 0 0.5rem 0;
+        line-height: 1.4;
+    }
+
+    .blog-content h6 {
+        color: white;
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin: 1rem 0 0.5rem 0;
+        line-height: 1.4;
+    }
+
+    .blog-content p {
+        color: #e2e8f0;
+        font-size: 1rem;
+        line-height: 1.6;
+        margin: 1rem 0;
+    }
+
+    .blog-content strong,
+    .blog-content b {
+        color: white;
+        font-weight: 700;
+    }
+
+    .blog-content em,
+    .blog-content i {
+        color: #cbd5e0;
+        font-style: italic;
+    }
+
+    .blog-content code {
+        background-color: #2d3748;
+        color: #f7fafc;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 0.875rem;
+    }
+
+    .blog-content pre {
+        background-color: #1a202c;
+        color: #f7fafc;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        overflow-x: auto;
+        margin: 1rem 0;
+        border: 1px solid #4a5568;
+    }
+
+    .blog-content pre code {
+        background: none;
+        padding: 0;
+        color: inherit;
+        font-size: 0.875rem;
+    }
+
+    .blog-content blockquote {
+        border-left: 4px solid #4299e1;
+        background-color: #2d3748;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 0 0.5rem 0.5rem 0;
+        color: #cbd5e0;
+        font-style: italic;
+    }
+
+    .blog-content ul,
+    .blog-content ol {
+        color: #e2e8f0;
+        margin: 1rem 0;
+        padding-left: 1.5rem;
+    }
+
+    .blog-content li {
+        margin: 0.5rem 0;
+        line-height: 1.6;
+    }
+
+    .blog-content ul li {
+        list-style-type: disc;
+    }
+
+    .blog-content ol li {
+        list-style-type: decimal;
+    }
+
+    .blog-content a {
+        color: #4299e1;
+        text-decoration: underline;
+        transition: color 0.2s ease;
+    }
+
+    .blog-content a:hover {
+        color: #63b3ed;
+    }
+
+    .blog-content hr {
+        border: none;
+        height: 2px;
+        background: linear-gradient(to right, transparent, #4a5568, transparent);
+        margin: 2rem 0;
+    }
+
+    .blog-content table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+        background-color: #2d3748;
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+
+    .blog-content th,
+    .blog-content td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #4a5568;
+        color: #e2e8f0;
+    }
+
+    .blog-content th {
+        background-color: #1a202c;
+        font-weight: 600;
+        color: white;
+    }
+
+    .blog-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 0.5rem;
+        margin: 1rem 0;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Remove the old global heading styles to avoid conflicts */
+</style>
+
+<body>
+    <div id="particles-js" class="background"></div>
+
+    <!-- Main Blog Container -->
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="blog-card-container mx-auto">
+            <!-- Blog Card - matching index.html style -->
+            <div class="card bg-base-200 shadow-xl">
+                <div class="card-body p-8">
+                    <!-- Hero Image Section -->
+                    {% if blog.hero_image %}
+                    <div class="hero-image-container">
+                        <img src="{{ blog.hero_image }}" alt="Blog Hero Image" class="hero-image" />
+                    </div>
+                    {% endif %}
+
+                    <!-- Header Section -->
+                    <div class="mb-6">
+                        <h1 class="blog-title text-white">
+                            {{ blog.title or 'Sample Blog Title' }}
+                        </h1>
+                        <div class="blog-meta text-gray-500 flex items-center gap-4">
+                            {% if blog.writer %}
+                            <span><i class="far fa-user mr-2"></i>{{ blog.writer }}</span>
+                            {% endif %}
+                            <span><i class="far fa-calendar-alt mr-2"></i>{{ blog.date or '2024-01-01' }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Content Section -->
+                    <div class="blog-content text-white">
+                        {% if blog.content %}
+                        <div class="prose prose-lg max-w-none text-white">
+                            {{ blog.content | safe }}
+                        </div>
+                        {% else %}
+                        <div class="text-center text-gray-500 py-8">
+                            <i class="far fa-file-alt text-4xl mb-4"></i>
+                            <p>No content available for this blog post.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Discord Embed Preview Section -->
+                    <div class="mt-8 pt-6 border-t border-gray-600">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-white">Discord Embed Preview</h3>
+                            <button onclick="copyDiscordEmbed()" class="btn btn-sm btn-outline">
+                                <i class="fab fa-discord mr-2"></i>Copy Embed Info
+                            </button>
+                        </div>
+
+                        <!-- Discord Embed Mock -->
+                        <div class="bg-gray-700 p-4 rounded-lg border-l-4 border-blue-500">
+                            <div class="flex items-start gap-3">
+                                <div
+                                    class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+                                    A
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="font-semibold text-white">ayonull</span>
+                                        <span class="text-xs text-gray-400">Today</span>
+                                    </div>
+
+                                    <!-- Embed Container -->
+                                    <div class="bg-gray-800 border-l-4 border-blue-400 p-4 rounded">
+                                        <h4 class="font-bold text-white mb-2">{{ blog.title or 'Blog Post' }}</h4>
+                                        <p class="text-gray-300 text-sm mb-3">
+                                            {% if blog.content %}
+                                            {{ blog.content | striptags | truncate(150) }}
+                                            {% else %}
+                                            A blog post by {{ blog.writer or 'ayonull' }}
+                                            {% endif %}
+                                        </p>
+
+                                        {% if blog.hero_image %}
+                                        <img src="{{ blog.hero_image }}" alt="Blog Hero"
+                                            class="w-full max-w-sm rounded mb-2">
+                                        {% endif %}
+
+                                        <div class="text-xs text-gray-400">
+                                            <span>{{ blog.writer or 'ayonull' }}</span> •
+                                            <span>{{ blog.date or '2024-01-01' }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+
+    particlesJS.load("particles-js", "/scripts/particles.json", function () {
+        console.log("callback - particles.js config loaded");
+    });
+
+</script>
+
+</html>

@@ -1,5 +1,6 @@
-from flask import Flask, render_template, send_from_directory, jsonify
+from flask import Flask, render_template, send_from_directory, jsonify, redirect
 from db.db import Projects, Blogs
+import markdown2
 import requests
 import base64
 import os
@@ -106,6 +107,7 @@ def index():
     projects = Projects.select()
     projects = sorted(projects, key=lambda x: int(x.date.split("-")[0]), reverse=True)
     blogs = Blogs.select()
+    # strip markdown to plain text for preview
     return render_template('index.html', projects=projects, blogs=blogs)
 
 @app.route('/images/<name>')
@@ -115,5 +117,17 @@ def images(name):
 def scripts(name):
     return send_from_directory('scripts', name)
 
+@app.route('/blog/<int:blog_id>')
+def blog_detail(blog_id):
+    blog = Blogs.get_or_none(Blogs.id == blog_id)
+    if not blog:
+        return "Blog not found", 404
+    # convert markdown content to HTML
+    blog.content = markdown2.markdown(blog.content, extras=["fenced-code-blocks", "footnotes", "strike", "tables", ]) if blog.content else ""
+    return render_template('blogs.html', blog=blog)
+
+@app.route('/blog')
+def red_blogs():
+    return redirect('/')
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")
