@@ -697,21 +697,53 @@
   let flightsData = [];
   let flightsMap = null;
   let expandedFlightsMap = null;
+  let airportCoordinates = {};
 
-  // Airport coordinates mapping (you'll need to expand this with more airports)
-  const airportCoordinates = {
-    'SJC': [-121.9289, 37.3626], // San Jose
-    'SNA': [-117.8682, 33.6757], // John Wayne Orange County
-    'LAX': [-118.4085, 33.9425], // Los Angeles
-    'YYZ': [-79.6248, 43.6777], // Toronto Pearson
-    'YUL': [-73.7408, 45.4706], // Montreal
-    'OGG': [-156.4306, 20.8987], // Kahului
-    'LHR': [-0.4614, 51.4700], // London Heathrow
-    'NCE': [7.2658, 43.6584], // Nice
-    'LGW': [-0.1902, 51.1481], // London Gatwick
-    'ORD': [-87.9073, 41.9742], // Chicago O'Hare
-    'BCN': [2.0833, 41.2974] // Barcelona
-  };
+  // Load airport coordinates from database
+  function loadAirportDatabase() {
+    return fetch('/scripts/airport_db.txt')
+      .then(response => response.text())
+      .then(data => {
+        const lines = data.trim().split('\n');
+        const coords = {};
+        
+        lines.forEach(line => {
+          const parts = line.split(':');
+          if (parts.length >= 16) {
+            const iataCode = parts[1]; // IATA code is the second field
+            const lat = parseFloat(parts[parts.length - 2]); // Second to last field
+            const lng = parseFloat(parts[parts.length - 1]); // Last field
+            
+            // Only add if we have valid coordinates and IATA code
+            if (iataCode && iataCode !== 'N/A' && !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0) {
+              coords[iataCode] = [lng, lat]; // [longitude, latitude] format for Mapbox
+            }
+          }
+        });
+        
+        airportCoordinates = coords;
+        console.log(`Loaded ${Object.keys(airportCoordinates).length} airports from database`);
+        return coords;
+      })
+      .catch(error => {
+        console.error('Error loading airport database:', error);
+        // Fallback to hardcoded coordinates
+        airportCoordinates = {
+          'SJC': [-121.9289, 37.3626], // San Jose
+          'SNA': [-117.8682, 33.6757], // John Wayne Orange County
+          'LAX': [-118.4085, 33.9425], // Los Angeles
+          'YYZ': [-79.6248, 43.6777], // Toronto Pearson
+          'YUL': [-73.7408, 45.4706], // Montreal
+          'OGG': [-156.4306, 20.8987], // Kahului
+          'LHR': [-0.4614, 51.4700], // London Heathrow
+          'NCE': [7.2658, 43.6584], // Nice
+          'LGW': [-0.1902, 51.1481], // London Gatwick
+          'ORD': [-87.9073, 41.9742], // Chicago O'Hare
+          'BCN': [2.0833, 41.2974] // Barcelona
+        };
+        return airportCoordinates;
+      });
+  }
 
   function getAirportCode(airportString) {
     const match = airportString.match(/\(([A-Z]{3})\/[A-Z]{4}\)/);
@@ -736,7 +768,10 @@
   }
 
   function loadFlightsData() {
-    fetch('/scripts/flight_info.csv')
+    // Load airport database first, then flight data
+    loadAirportDatabase().then(() => {
+      return fetch('/scripts/flight_info.csv');
+    })
       .then(response => response.text())
       .then(csvText => {
         flightsData = parseCSV(csvText);
