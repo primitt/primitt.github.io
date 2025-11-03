@@ -8,10 +8,13 @@
     crossorigin="anonymous"></script>
   <script src="./scripts/particles.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Mapbox GL JS -->
+  <script src='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css' rel='stylesheet' />
   <meta charset="UTF-8" />
   <meta name="google" content="notranslate" />
   <meta http-equiv="Content-Language" content="en" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>ayonull</title>
   <!-- add meta tags for discord -->
   <meta name="description" content="Primitt/ayonull's profile. Projects, blogs, experience & more." />
@@ -86,65 +89,74 @@
 
 <body>
   <div id="particles-js" class="background"></div>
-  <div class="flex flex-wrap items-start mx-5 sm:mx-0 justify-center lg:h-screen md:h-screen content-center gap-5">
-    <!-- First Row - Profile Section spanning 2 columns -->
-    <div class="card w-full max-w-4xl bg-base-200 shadow-xl mt-5 sm:mt-0" id="homepage">
-      <div class="card-body">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <!-- Left side - Profile info -->
-          <div>
-            <p class="leading-3 mb-2">Hi! I am</p>
-            <div class="flex">
-              <h2 class="text-4xl leading-7">
-                <span><b><span id="usernames" class="typing inline-block mb-2"></span></b></span>
-              </h2>
-              <img src="./images/1f1fa-1f1f8.svg" width="30px" />
-            </div>
-            <div class="flex gap-2 leading-6 text-xl" style="margin-top: 8px">
-              <a href="https://github.com/primitt"><i class="fab fa-github"></i></a>
-              <a href="https://twitter.com/primitt"><i class="fab fa-twitter"></i></a>
-              <a href="https://www.linkedin.com/in/primitt/"><i class="fab fa-linkedin"></i></a>
-              <a href="https://anilist.co/user/pma">
-                <span><img src="./images/anilist.svg" width="20px" /></span>
-              </a>
-            </div>
-          </div>
-          
-          <!-- Right side - About description -->
-          <div class="flex items-center">
-            <p class="text-gray-300 leading-relaxed">
-              Motivated and dedicated high school student, highly driven to research, learn, and apply new and advanced technologies to solve problems and build applications, looking to learn, grow and make a positive social impact with technology.
-            </p>
-          </div>
+  
+  <!-- Top Profile Section (full screen) -->
+  <div class="container mx-auto px-4 pb-8 max-w-7xl">
+    <div class="h-[92vh] flex items-center justify-center relative mt-8 mb-5">
+    <div class="card bg-base-200 absolute inset-0 flex flex-col justify-center items-center text-center px-4 pb-8">
+      <!-- Main content centered -->
+      <div class="flex-1 flex flex-col justify-center items-center max-w-4xl">
+        <p class="text-lg mb-4 text-gray-300">Hi! I am</p>
+        <div class="flex items-center justify-center gap-3 mb-6">
+          <h1 class="text-6xl md:text-8xl font-bold">
+            <span id="usernames" class="typing"></span>
+          </h1>
+          <img src="./images/1f1fa-1f1f8.svg" width="50px" class="ml-2" />
+        </div>
+        
+        <!-- Social links centered under name -->
+        <div class="flex gap-6 text-3xl mb-8">
+          <a href="https://github.com/primitt" class="text-gray-300 hover:text-white transition-colors">
+            <i class="fab fa-github"></i>
+          </a>
+          <a href="https://twitter.com/primitt" class="text-gray-300 hover:text-white transition-colors">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="https://www.linkedin.com/in/primitt/" class="text-gray-300 hover:text-white transition-colors">
+            <i class="fab fa-linkedin"></i>
+          </a>
+          <a href="https://anilist.co/user/pma" class="text-gray-300 hover:text-white transition-colors">
+            <img src="./images/anilist.svg" width="28px" />
+          </a>
         </div>
       </div>
+      
+      <!-- Description at bottom -->
+      <div class="absolute bottom-20 left-1/2 transform -translate-x-1/2 max-w-2xl px-4">
+        <p class="text-gray-300 text-sm md:text-lg leading-relaxed text-center">
+          Motivated and dedicated high school student, highly driven to research, learn, and apply new and advanced
+          technologies to solve problems and build applications, looking to learn, grow and make a positive social
+          impact with technology.
+        </p>
+      </div>
+      <p class="text-gray-500 mt-2">Scroll down to explore my projects, blogs, and more!</p>
     </div>
-
-    <!-- Second Row - 3 columns layout -->
-    <div class="flex justify-center gap-5 w-full max-w-7xl">
+  </div>
+    <!-- 3 columns layout - responsive grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-5">
       <!-- First Column -->
-      <div class="flex flex-col gap-5 flex-shrink-0">
-        <div class="card w-96 bg-base-200 shadow-xl" id="languagespage">
+      <div class="flex flex-col gap-5">
+        <div class="card w-full bg-base-200 shadow-xl" id="languagespage">
           <div class="card-body">
             <div class="card-title text-2xl font-bold">
               <p>Languages</p>
             </div>
             <div>
               <p style="margin-bottom: 5px">Python</p>
-              <progress class="progress w-56" value="90" max="100"></progress>
+              <progress class="progress w-full" value="90" max="100"></progress>
               <p style="margin-bottom: 5px">JS/TS</p>
-              <progress class="progress w-56" value="85" max="100"></progress>
+              <progress class="progress w-full" value="85" max="100"></progress>
               <p style="margin-bottom: 5px">Java</p>
-              <progress class="progress w-56" value="70" max="100"></progress>
+              <progress class="progress w-full" value="70" max="100"></progress>
               <p style="margin-bottom: 5px">C++</p>
-              <progress class="progress w-56" value="60" max="100"></progress>
+              <progress class="progress w-full" value="60" max="100"></progress>
               <p style="margin-bottom: 5px">HTML/CSS</p>
-              <progress class="progress w-56" value="60" max="100"></progress>
+              <progress class="progress w-full" value="60" max="100"></progress>
             </div>
           </div>
         </div>
 
-        <div class="card w-96 bg-base-200 shadow-xl" id="spotifypage">
+        <div class="card w-full bg-base-200 shadow-xl" id="spotifypage">
           <div class="card-body">
             <div class="text-2xl">
               <p class="font-bold flex items-center gap-2">
@@ -185,7 +197,7 @@
       </div>
 
       <!-- Second Column - Projects -->
-      <div class="card w-96 bg-base-200 shadow-xl flex-shrink-0" id="projectspage">
+      <div class="card w-full bg-base-200 shadow-xl" id="projectspage">
         <div class="card-body">
           <div class="text-2xl">
             <p class="font-bold">Projects</p>
@@ -212,14 +224,14 @@
           </div>
           {% endfor %}
         </div>
-        
+
         <div class="card-actions justify-center p-4 border-t border-gray-600">
           <button id="expand-projects" class="btn btn-sm btn-outline" onclick="toggleProjectsExpand()">Expand</button>
         </div>
       </div>
 
       <!-- Third Column - Blog -->
-      <div class="card w-96 bg-base-200 shadow-xl flex-shrink-0" id="blogspage">
+      <div class="card w-full bg-base-200 shadow-xl" id="blogspage">
         <div class="card-body">
           <div class="text-2xl">
             <p class="font-bold">Blog</p>
@@ -249,9 +261,70 @@
           </div>
           {% endif %}
         </div>
-        
+
         <div class="card-actions justify-center p-4 border-t border-gray-600">
           <button id="expand-blogs" class="btn btn-sm btn-outline" onclick="toggleBlogsExpand()">Expand</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Photography Section - Full width -->
+    <div class="w-full">
+      <div class="card w-full bg-base-200 shadow-xl" id="photographypage">
+        <div class="card-body">
+          <div class="text-2xl">
+            <p class="font-bold">Photography</p>
+            <p class="text-sm text-gray-500">Photos I have taken over the years</p>
+          </div>
+          <div class="text-center py-8">
+            <div class="text-6xl mb-4">📸</div>
+            <p class="text-gray-400 italic">coming soon...</p>
+          </div>
+        </div>
+        <div class="hidden card-actions justify-center p-4 border-t border-gray-600">
+          <button id="expand-photography" class="btn btn-sm btn-outline" onclick="togglePhotographyExpand()">Expand</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Flights Section - Full width -->
+    <div class="w-full mt-5">
+      <div class="card w-full bg-base-200 shadow-xl" id="flightspage">
+        <div class="card-body">
+          <div class="text-2xl mb-4">
+            <p class="font-bold flex items-center gap-2">
+              <i class="fas fa-plane text-blue-500"></i>
+              Recent Flights
+            </p>
+            <p class="text-sm text-gray-500">Where I've been flying recently</p>
+          </div>
+          
+          <!-- Map container -->
+          <div id="flights-map" class="w-full h-96 rounded-lg bg-gray-800 mb-4"></div>
+          
+          <!-- Flight stats -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div class="bg-base-300 rounded-lg p-4 text-center">
+              <div class="text-2xl font-bold text-blue-400" id="total-flights">-</div>
+              <div class="text-sm text-gray-400">Total Flights</div>
+            </div>
+            <div class="bg-base-300 rounded-lg p-4 text-center">
+              <div class="text-2xl font-bold text-purple-400" id="countries-visited">-</div>
+              <div class="text-sm text-gray-400">Countries</div>
+            </div>
+          </div>
+
+          <!-- Recent flights list -->
+          <div id="recent-flights-list" class="space-y-2">
+            <div class="text-center py-4">
+              <i class="fas fa-spinner fa-spin text-gray-400"></i>
+              <p class="text-gray-400 mt-2">Loading flight data...</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card-actions justify-center p-4 border-t border-gray-600">
+          <button id="expand-flights" class="btn btn-sm btn-outline" onclick="toggleFlightsExpand()">View All Flights</button>
         </div>
       </div>
     </div>
@@ -344,7 +417,8 @@
         <div class="max-w-6xl mx-auto">
           <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
             {% for project in projects %}
-            <div class="card bg-base-300 shadow-lg border border-gray-600 hover:shadow-xl transition-shadow duration-200">
+            <div
+              class="card bg-base-300 shadow-lg border border-gray-600 hover:shadow-xl transition-shadow duration-200">
               <div class="card-body p-4">
                 <div class="flex items-start justify-between mb-3">
                   <h3 class="font-bold text-lg text-white">{{ project.name }}</h3>
@@ -383,7 +457,8 @@
                     {% endif %}
                   </div>
                   {% if project.link %}
-                  <a href="{{ project.link }}" target="_blank" class="btn btn-ghost btn-xs text-gray-400 hover:text-white">
+                  <a href="{{ project.link }}" target="_blank"
+                    class="btn btn-ghost btn-xs text-gray-400 hover:text-white">
                     <i class="fas fa-external-link-alt"></i>
                   </a>
                   {% endif %}
@@ -397,12 +472,79 @@
     </div>
   </div>
 
+  <!-- Expanded full-photography panel (hidden by default) -->
+  <div id="photographypage-expanded" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm">
+    <div class="w-full h-full bg-base-200 shadow-2xl border border-gray-600 flex flex-col">
+      <!-- Windows-style title bar -->
+      <div class="bg-base-300 border-b border-gray-600 px-4 py-2 flex items-center justify-between select-none">
+        <div class="flex items-center gap-3">
+          <span class="text-lg font-semibold text-white">All Photography</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="w-8 h-8 rounded hover:bg-red-600 hover:text-white flex items-center justify-center text-white"
+            onclick="togglePhotographyExpand()">
+            <i class="fas fa-times text-sm"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Content area -->
+      <div class="flex-1 overflow-auto p-6 bg-base-200">
+        <div class="max-w-6xl mx-auto">
+          <div class="text-center py-20">
+            <div class="text-8xl mb-6">📸</div>
+            <h2 class="text-2xl font-bold text-white mb-2">Coming Soon</h2>
+            <p class="text-gray-400 italic text-lg">Photography portfolio in development</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Expanded full-flights panel (hidden by default) -->
+  <div id="flightspage-expanded" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm">
+    <div class="w-full h-full bg-base-200 shadow-2xl border border-gray-600 flex flex-col">
+      <!-- Windows-style title bar -->
+      <div class="bg-base-300 border-b border-gray-600 px-4 py-2 flex items-center justify-between select-none">
+        <div class="flex items-center gap-3">
+          <span class="text-lg font-semibold text-white">All Flights</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="w-8 h-8 rounded hover:bg-red-600 hover:text-white flex items-center justify-center text-white"
+            onclick="toggleFlightsExpand()">
+            <i class="fas fa-times text-sm"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Content area -->
+      <div class="flex-1 overflow-auto p-6 bg-base-200">
+        <div class="max-w-6xl mx-auto">
+          <!-- Full map for expanded view -->
+          <div id="flights-map-expanded" class="w-full h-96 rounded-lg bg-gray-800 mb-6"></div>
+          
+          <!-- All flights list -->
+          <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div id="all-flights-list" class="col-span-full">
+              <div class="text-center py-4">
+                <i class="fas fa-spinner fa-spin text-gray-400"></i>
+                <p class="text-gray-400 mt-2">Loading all flights...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+  </div>
+
   <script>
     // Simplified toggle functions without animations
     function toggleProjectsExpand() {
       const expanded = document.getElementById('projectspage-expanded');
       const isHidden = expanded.classList.contains('hidden');
-      
+
       if (isHidden) {
         expanded.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
@@ -415,10 +557,42 @@
     function toggleBlogsExpand() {
       const expanded = document.getElementById('blogspage-expanded');
       const isHidden = expanded.classList.contains('hidden');
-      
+
       if (isHidden) {
         expanded.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
+      } else {
+        expanded.classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+    }
+
+    function togglePhotographyExpand() {
+      const expanded = document.getElementById('photographypage-expanded');
+      const isHidden = expanded.classList.contains('hidden');
+
+      if (isHidden) {
+        expanded.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      } else {
+        expanded.classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+    }
+
+    function toggleFlightsExpand() {
+      const expanded = document.getElementById('flightspage-expanded');
+      const isHidden = expanded.classList.contains('hidden');
+
+      if (isHidden) {
+        expanded.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        // Initialize expanded map if not already done
+        if (!window.expandedFlightsMap) {
+          initializeExpandedFlightsMap();
+        }
+        // Populate all flights list
+        populateAllFlightsList();
       } else {
         expanded.classList.add('hidden');
         document.body.style.overflow = '';
@@ -512,6 +686,324 @@
 
   // Update every 30 seconds
   setInterval(updateSpotifyStatus, 30000);
+
+  // Flights Integration
+  let flightsData = [];
+  let flightsMap = null;
+  let expandedFlightsMap = null;
+
+  // Airport coordinates mapping (you'll need to expand this with more airports)
+  const airportCoordinates = {
+    'SJC': [-121.9289, 37.3626], // San Jose
+    'SNA': [-117.8682, 33.6757], // John Wayne Orange County
+    'LAX': [-118.4085, 33.9425], // Los Angeles
+    'YYZ': [-79.6248, 43.6777], // Toronto Pearson
+    'YUL': [-73.7408, 45.4706], // Montreal
+    'OGG': [-156.4306, 20.8987], // Kahului
+    'LHR': [-0.4614, 51.4700], // London Heathrow
+    'NCE': [7.2658, 43.6584], // Nice
+    'LGW': [-0.1902, 51.1481], // London Gatwick
+    'ORD': [-87.9073, 41.9742], // Chicago O'Hare
+    'BCN': [2.0833, 41.2974] // Barcelona
+  };
+
+  function getAirportCode(airportString) {
+    const match = airportString.match(/\(([A-Z]{3})\/[A-Z]{4}\)/);
+    return match ? match[1] : null;
+  }
+
+  function parseCSV(csvText) {
+    const lines = csvText.trim().split('\n');
+    const headers = lines[0].split(',').map(h => h.replace(/"/g, ''));
+    const data = [];
+
+    for (let i = 1; i < lines.length; i++) {
+      const values = lines[i].split(',');
+      const row = {};
+      headers.forEach((header, index) => {
+        row[header] = values[index] ? values[index].replace(/"/g, '') : '';
+      });
+      data.push(row);
+    }
+
+    return data.sort((a, b) => new Date(b.Date) - new Date(a.Date));
+  }
+
+  function loadFlightsData() {
+    fetch('/scripts/flight_info.csv')
+      .then(response => response.text())
+      .then(csvText => {
+        flightsData = parseCSV(csvText);
+        updateFlightsUI();
+        initializeFlightsMap();
+      })
+      .catch(error => {
+        console.error('Error loading flights data:', error);
+        document.getElementById('recent-flights-list').innerHTML = 
+          '<div class="text-center py-4"><p class="text-red-400">Failed to load flight data</p></div>';
+      });
+  }
+
+  function updateFlightsUI() {
+    // Update stats
+    document.getElementById('total-flights').textContent = flightsData.length;
+    
+    const countries = new Set();
+    flightsData.forEach(flight => {
+      // Simple country detection - you might want to make this more sophisticated
+      const fromCode = getAirportCode(flight.From);
+      const toCode = getAirportCode(flight.To);
+      if (fromCode && fromCode.startsWith('Y')) countries.add('Canada');
+      if (fromCode && ['LAX', 'SJC', 'SNA', 'ORD'].includes(fromCode)) countries.add('USA');
+      if (fromCode && ['LHR', 'LGW'].includes(fromCode)) countries.add('UK');
+      if (fromCode && fromCode === 'NCE') countries.add('France');
+      if (fromCode && fromCode === 'BCN') countries.add('Spain');
+      if (fromCode && fromCode === 'OGG') countries.add('USA');
+    });
+    
+    document.getElementById('countries-visited').textContent = countries.size;
+
+    // Show recent flights (last 5)
+    const recentFlights = flightsData.slice(0, 5);
+    const flightsList = document.getElementById('recent-flights-list');
+    
+    if (recentFlights.length === 0) {
+      flightsList.innerHTML = '<div class="text-center py-4"><p class="text-gray-400">No flights found</p></div>';
+      return;
+    }
+
+    flightsList.innerHTML = recentFlights.map(flight => {
+      const fromCode = getAirportCode(flight.From);
+      const toCode = getAirportCode(flight.To);
+      const airline = flight.Airline.split('(')[0].trim();
+      
+      return `
+        <div class="flex items-center justify-between p-3 bg-base-300 rounded-lg border border-gray-600">
+          <div class="flex items-center space-x-3">
+            <div class="text-2xl">✈️</div>
+            <div>
+              <div class="font-semibold text-white">${fromCode} → ${toCode}</div>
+              <div class="text-sm text-gray-400">${airline} • ${flight['Flight number']}</div>
+              <div class="text-xs text-gray-500">${flight.Date}</div>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-sm text-gray-300">${flight.Duration}</div>
+            <div class="text-xs text-gray-500">${flight.Aircraft.split('(')[0].trim()}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function initializeFlightsMap() {
+    mapboxgl.accessToken = 'pk.eyJ1IjoiYXlvbnVsbCIsImEiOiJjbWhpcnhvbmgweHA4MmxwdTFyMGJvY2hlIn0.3cNXJSBeHkJjj5X0YIR6xw';
+    
+    // Check if Mapbox GL JS is loaded
+    if (typeof mapboxgl === 'undefined') {
+      console.error('Mapbox GL JS not loaded');
+      document.getElementById('flights-map').innerHTML = 
+        '<div class="flex items-center justify-center h-full text-gray-400">' +
+        '<div class="text-center">' +
+        '<i class="fas fa-exclamation-triangle text-4xl mb-2"></i>' +
+        '<p>Mapbox GL JS failed to load</p>' +
+        '<p class="text-xs">Check your internet connection</p>' +
+        '</div></div>';
+      return;
+    }
+
+    try {
+      console.log('Initializing Mapbox with token:', mapboxgl.accessToken.substring(0, 20) + '...');
+      
+      flightsMap = new mapboxgl.Map({
+        container: 'flights-map',
+        style: 'mapbox://styles/mapbox/dark-v11',
+        center: [-98.5795, 39.8283], // Center of US
+        zoom: 3
+      });
+
+      flightsMap.on('load', () => {
+        console.log('Map loaded successfully');
+        addFlightPaths(flightsMap);
+      });
+
+      flightsMap.on('error', (e) => {
+        console.error('Map error:', e.error);
+        document.getElementById('flights-map').innerHTML = 
+          '<div class="flex items-center justify-center h-full text-gray-400">' +
+          '<div class="text-center">' +
+          '<i class="fas fa-exclamation-triangle text-4xl mb-2"></i>' +
+          '<p>Map failed to load</p>' +
+          '<p class="text-xs">' + e.error.message + '</p>' +
+          '</div></div>';
+      });
+
+    } catch (error) {
+      console.error('Mapbox initialization failed:', error);
+      document.getElementById('flights-map').innerHTML = 
+        '<div class="flex items-center justify-center h-full text-gray-400">' +
+        '<div class="text-center">' +
+        '<i class="fas fa-exclamation-triangle text-4xl mb-2"></i>' +
+        '<p>Map initialization failed</p>' +
+        '<p class="text-xs">' + error.message + '</p>' +
+        '</div></div>';
+    }
+  }
+
+  function initializeExpandedFlightsMap() {
+    if (!mapboxgl.accessToken) {
+      console.error('No Mapbox access token available for expanded map');
+      return;
+    }
+    
+    try {
+      console.log('Initializing expanded map...');
+      
+      expandedFlightsMap = new mapboxgl.Map({
+        container: 'flights-map-expanded',
+        style: 'mapbox://styles/mapbox/dark-v11',
+        center: [-98.5795, 39.8283],
+        zoom: 2
+      });
+
+      expandedFlightsMap.on('load', () => {
+        console.log('Expanded map loaded successfully');
+        addFlightPaths(expandedFlightsMap);
+      });
+
+      expandedFlightsMap.on('error', (e) => {
+        console.error('Expanded map error:', e.error);
+      });
+
+    } catch (error) {
+      console.error('Expanded map initialization failed:', error);
+    }
+  }
+
+  function addFlightPaths(map) {
+    const features = [];
+    
+    flightsData.forEach((flight, index) => {
+      const fromCode = getAirportCode(flight.From);
+      const toCode = getAirportCode(flight.To);
+      
+      if (fromCode && toCode && airportCoordinates[fromCode] && airportCoordinates[toCode]) {
+        // Add flight path
+        features.push({
+          type: 'Feature',
+          properties: {
+            flightNumber: flight['Flight number'],
+            airline: flight.Airline.split('(')[0].trim(),
+            date: flight.Date
+          },
+          geometry: {
+            type: 'LineString',
+            coordinates: [airportCoordinates[fromCode], airportCoordinates[toCode]]
+          }
+        });
+      }
+    });
+
+    if (features.length > 0) {
+      map.addSource('flights', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: features
+        }
+      });
+
+      map.addLayer({
+        id: 'flight-paths',
+        type: 'line',
+        source: 'flights',
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round'
+        },
+        paint: {
+          'line-color': '#3b82f6',
+          'line-width': 2,
+          'line-opacity': 0.7
+        }
+      });
+
+      // Add airport markers
+      Object.entries(airportCoordinates).forEach(([code, coords]) => {
+        const marker = new mapboxgl.Marker({
+          color: '#10b981'
+        })
+        .setLngLat(coords)
+        .setPopup(new mapboxgl.Popup().setHTML(`<strong>${code}</strong>`))
+        .addTo(map);
+      });
+    }
+  }
+
+  function populateAllFlightsList() {
+    const allFlightsList = document.getElementById('all-flights-list');
+    
+    if (flightsData.length === 0) {
+      allFlightsList.innerHTML = '<div class="text-center py-4"><p class="text-gray-400">No flights found</p></div>';
+      return;
+    }
+
+    // Create a grid of all flights
+    allFlightsList.innerHTML = `
+      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        ${flightsData.map(flight => {
+          const fromCode = getAirportCode(flight.From);
+          const toCode = getAirportCode(flight.To);
+          const airline = flight.Airline.split('(')[0].trim();
+          const aircraft = flight.Aircraft.split('(')[0].trim();
+          
+          return `
+            <div class="card bg-base-300 shadow-lg border border-gray-600 hover:shadow-xl transition-shadow duration-200">
+              <div class="card-body p-4">
+                <div class="flex items-start justify-between mb-3">
+                  <h3 class="font-bold text-lg text-white">${fromCode} → ${toCode}</h3>
+                  <div class="text-right text-xs text-gray-400">${flight.Date}</div>
+                </div>
+
+                <div class="space-y-2 mb-3">
+                  <div class="flex justify-between">
+                    <span class="text-sm text-gray-400">Flight:</span>
+                    <span class="text-sm text-white">${flight['Flight number']}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-sm text-gray-400">Airline:</span>
+                    <span class="text-sm text-white">${airline}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-sm text-gray-400">Aircraft:</span>
+                    <span class="text-sm text-white">${aircraft}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-sm text-gray-400">Duration:</span>
+                    <span class="text-sm text-white">${flight.Duration}</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between text-xs">
+                  <div class="text-gray-500">
+                    <i class="fas fa-plane-departure mr-1"></i>
+                    ${flight['Dep time']}
+                  </div>
+                  <div class="text-gray-500">
+                    <i class="fas fa-plane-arrival mr-1"></i>
+                    ${flight['Arr time']}
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }
+
+  // Initialize flights when page loads
+  loadFlightsData();
 </script>
 
 </html>

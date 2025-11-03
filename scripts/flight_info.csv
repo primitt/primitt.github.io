@@ -1,0 +1,18 @@
+
+Date,"Flight number",From,To,"Dep time","Arr time",Duration,Airline,Aircraft,Registration,"Seat number","Seat type","Flight class","Flight reason",Note,Dep_id,Arr_id,Airline_id,Aircraft_id
+2023-02-05,WN1700,"San Jose / San Jose (SJC/KSJC)","Santa Ana / John Wayne-Orange Co (SNA/KSNA)",20:55:00,22:25:00,01:30:00,"Southwest Airlines (WN/SWA)","Boeing 737-700 (B737)",N7836A,,2,1,1,,2680,2726,736,230
+2022-07-30,AC792,"Los Angeles / Los Angeles International (LAX/KLAX)","Toronto / Pearson (YYZ/CYYZ)",01:47:00,09:57:00,05:10:00,"Air Canada (AC/ACA)","Boeing 737 MAX 8 (B38M)",C-GEKZ,,1,1,1,,1559,3500,13,2123
+2022-08-07,AC779,"Montreal / Pierre Elliot Trudeau (YUL/CYUL)","Los Angeles / Los Angeles International (LAX/KLAX)",17:25:00,20:42:00,06:17:00,"Air Canada (AC/ACA)","Airbus A321 (A321)",,,0,0,0,,3450,1559,13,28
+2022-12-29,HA34,"Kahului / Kahului (OGG/PHOG)","Los Angeles / Los Angeles International (LAX/KLAX)",13:20:00,20:35:00,04:15:00,"Hawaiian Airlines (HA/HAL)","Airbus A330-200 (A332)",,,0,0,0,,2159,1559,346,30
+2023-12-23,AA134,"Los Angeles / Los Angeles International (LAX/KLAX)","London / Heathrow (LHR/EGLL)",17:15:00,12:00:00,10:45:00,"American Airlines (AA/AAL)","Boeing 777-300ER (B77W)",,,0,0,0,,1559,1618,4,2023
+2023-12-25,AF7551,"London / Heathrow (LHR/EGLL)","Nice / Nice Cote D'Azur (NCE/LFMN)",08:55:00,12:00:00,02:05:00,"Air France (AF/AFR)","Airbus A320-200 (A320)",,,0,0,0,,1618,2027,34,2059
+2023-12-31,U28416,"Nice / Nice Cote D'Azur (NCE/LFMN)","London / Gatwick (LGW/EGKK)",11:45:00,12:35:00,01:50:00,"Easyjet (U2/EZY)","Airbus A320-200 (A320)",,,0,0,0,,2027,1614,291,2059
+2024-01-01,AA87,"London / Heathrow (LHR/EGLL)","Chicago / O'Hare (ORD/KORD)",14:10:00,17:00:00,08:50:00,"American Airlines (AA/AAL)","Boeing 787-9 (B789)",,,0,0,0,,1618,2205,4,2088
+2024-01-01,AA529,"Chicago / O'Hare (ORD/KORD)","Los Angeles / Los Angeles International (LAX/KLAX)",14:58:00,17:30:00,04:32:00,"American Airlines (AA/AAL)","Boeing 737-800 (B738)",,,0,0,0,,2205,1559,4,231
+2024-12-22,AA8601,"Los Angeles / Los Angeles International (LAX/KLAX)","Barcelona / El Prat (BCN/LEBL)",19:30:00,16:15:00,11:45:00,"American Airlines (AA/AAL)","Airbus A330-200 (A332)",,,0,0,0,,1559,239,4,30
+2024-12-27,FR2402,"Barcelona / El Prat (BCN/LEBL)","Sevilla / San Pablo (SVQ/LEZL)",20:10:00,21:55:00,01:45:00,"Ryanair (FR/RYR)","Boeing 737 MAX 8 (B38M)",,,0,0,0,,239,2819,668,2123
+2025-01-01,IB351,"Madrid / Barajas (MAD/LEMD)","Los Angeles / Los Angeles International (LAX/KLAX)",12:50:00,16:35:00,12:45:00,"Iberia (IB/IBE)","Airbus A330-200 (A332)",,,0,0,0,,1739,1559,377,30
+2025-06-08,AA2590,"Santa Ana / John Wayne-Orange Co (SNA/KSNA)","Chicago / O'Hare (ORD/KORD)",08:51:00,14:54:00,04:03:00,"American Airlines (AA/AAL)","Boeing 737 MAX 8 (B38M)",,,0,0,0,,2726,2205,4,2123
+2025-06-08,AA1461,"Chicago / O'Hare (ORD/KORD)","Boston / Logan (BOS/KBOS)",18:45:00,22:04:00,02:19:00,"American Airlines (AA/AAL)","Boeing 737-800 (B738)",,,0,0,0,,2205,380,4,231
+2025-06-14,AA377,"Boston / Logan (BOS/KBOS)","Phoenix / Sky Harbor (PHX/KPHX)",09:45:00,12:08:00,04:23:00,"American Airlines (AA/AAL)","Boeing 737 MAX 8 (B38M)",,,0,0,0,,380,2315,4,2123
+2025-06-14,AA1997,"Phoenix / Sky Harbor (PHX/KPHX)","Santa Ana / John Wayne-Orange Co (SNA/KSNA)",14:04:00,15:23:00,02:19:00,"American Airlines (AA/AAL)","Airbus A321neo (A21N)",,,0,0,0,,2315,2726,4,2128
