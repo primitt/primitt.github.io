@@ -344,54 +344,6 @@
                         </div>
                         {% endif %}
                     </div>
-
-                    <!-- Discord Embed Preview Section -->
-                    <div class="mt-8 pt-6 border-t border-gray-600">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-lg font-semibold text-white">Discord Embed Preview</h3>
-                            <button onclick="copyDiscordEmbed()" class="btn btn-sm btn-outline">
-                                <i class="fab fa-discord mr-2"></i>Copy Embed Info
-                            </button>
-                        </div>
-
-                        <!-- Discord Embed Mock -->
-                        <div class="bg-gray-700 p-4 rounded-lg border-l-4 border-blue-500">
-                            <div class="flex items-start gap-3">
-                                <div
-                                    class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
-                                    A
-                                </div>
-                                <div class="flex-1">
-                                    <div class="flex items-center gap-2 mb-1">
-                                        <span class="font-semibold text-white">ayonull</span>
-                                        <span class="text-xs text-gray-400">Today</span>
-                                    </div>
-
-                                    <!-- Embed Container -->
-                                    <div class="bg-gray-800 border-l-4 border-blue-400 p-4 rounded">
-                                        <h4 class="font-bold text-white mb-2">{{ blog.title or 'Blog Post' }}</h4>
-                                        <p class="text-gray-300 text-sm mb-3">
-                                            {% if blog.content %}
-                                            {{ blog.content | striptags | truncate(150) }}
-                                            {% else %}
-                                            A blog post by {{ blog.writer or 'ayonull' }}
-                                            {% endif %}
-                                        </p>
-
-                                        {% if blog.hero_image %}
-                                        <img src="{{ blog.hero_image }}" alt="Blog Hero"
-                                            class="w-full max-w-sm rounded mb-2">
-                                        {% endif %}
-
-                                        <div class="text-xs text-gray-400">
-                                            <span>{{ blog.writer or 'ayonull' }}</span> •
-                                            <span>{{ blog.date or '2024-01-01' }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
