@@ -923,12 +923,17 @@
 
   function addFlightPaths(map) {
     const features = [];
+    const visitedAirports = new Set(); // Track airports actually visited
     
     flightsData.forEach((flight, index) => {
       const fromCode = getAirportCode(flight.From);
       const toCode = getAirportCode(flight.To);
       
       if (fromCode && toCode && airportCoordinates[fromCode] && airportCoordinates[toCode]) {
+        // Track visited airports
+        visitedAirports.add(fromCode);
+        visitedAirports.add(toCode);
+        
         // Add flight path
         features.push({
           type: 'Feature',
@@ -969,14 +974,16 @@
         }
       });
 
-      // Add airport markers
-      Object.entries(airportCoordinates).forEach(([code, coords]) => {
-        const marker = new mapboxgl.Marker({
-          color: '#10b981'
-        })
-        .setLngLat(coords)
-        .setPopup(new mapboxgl.Popup().setHTML(`<strong>${code}</strong>`))
-        .addTo(map);
+      // Add airport markers ONLY for visited airports
+      visitedAirports.forEach(code => {
+        if (airportCoordinates[code]) {
+          const marker = new mapboxgl.Marker({
+            color: '#10b981'
+          })
+          .setLngLat(airportCoordinates[code])
+          .setPopup(new mapboxgl.Popup().setHTML(`<strong>${code}</strong>`))
+          .addTo(map);
+        }
       });
     }
   }
