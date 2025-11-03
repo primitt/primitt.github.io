@@ -91,6 +91,18 @@
   .mapboxgl-ctrl-logo {
     display: none !important;
   }
+
+  /* Custom styling for flight popups */
+  .flight-popup .mapboxgl-popup-content {
+    background: transparent !important;
+    padding: 0 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .flight-popup .mapboxgl-popup-tip {
+    border-top-color: #111827 !important;
+  }
 </style>
 
 <body>
@@ -924,6 +936,7 @@
   function addFlightPaths(map) {
     const features = [];
     const visitedAirports = new Set(); // Track airports actually visited
+    const airportDetails = {}; // Store airport details for popups
     
     flightsData.forEach((flight, index) => {
       const fromCode = getAirportCode(flight.From);
@@ -934,13 +947,25 @@
         visitedAirports.add(fromCode);
         visitedAirports.add(toCode);
         
+        // Store airport details for popups
+        airportDetails[fromCode] = flight.From;
+        airportDetails[toCode] = flight.To;
+        
         // Add flight path
         features.push({
           type: 'Feature',
           properties: {
             flightNumber: flight['Flight number'],
             airline: flight.Airline.split('(')[0].trim(),
-            date: flight.Date
+            date: flight.Date,
+            from: flight.From,
+            to: flight.To,
+            fromCode: fromCode,
+            toCode: toCode,
+            duration: flight.Duration,
+            aircraft: flight.Aircraft.split('(')[0].trim(),
+            depTime: flight['Dep time'],
+            arrTime: flight['Arr time']
           },
           geometry: {
             type: 'LineString',
@@ -969,19 +994,73 @@
         },
         paint: {
           'line-color': '#3b82f6',
-          'line-width': 2,
-          'line-opacity': 0.7
+          'line-width': 3,
+          'line-opacity': 0.8
         }
       });
 
-      // Add airport markers ONLY for visited airports
+      // Add click event for flight paths
+      map.on('click', 'flight-paths', (e) => {
+        const properties = e.features[0].properties;
+        
+        const popupContent = `
+          <div class="p-3 bg-gray-900 text-white rounded-lg min-w-64">
+            <div class="font-bold text-lg mb-2 text-blue-400">
+              ${properties.fromCode} → ${properties.toCode}
+            </div>
+            <div class="space-y-1 text-sm">
+              <div><strong>Flight:</strong> ${properties.flightNumber}</div>
+              <div><strong>Airline:</strong> ${properties.airline}</div>
+              <div><strong>Aircraft:</strong> ${properties.aircraft}</div>
+              <div><strong>Date:</strong> ${properties.date}</div>
+              <div><strong>Duration:</strong> ${properties.duration}</div>
+              <div class="flex justify-between pt-2 border-t border-gray-700 mt-2">
+                <div><strong>Departure:</strong> ${properties.depTime}</div>
+                <div><strong>Arrival:</strong> ${properties.arrTime}</div>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        new mapboxgl.Popup({
+          closeButton: true,
+          closeOnClick: false,
+          className: 'flight-popup'
+        })
+        .setLngLat(e.lngLat)
+        .setHTML(popupContent)
+        .addTo(map);
+      });
+
+      // Change cursor on hover
+      map.on('mouseenter', 'flight-paths', () => {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'flight-paths', () => {
+        map.getCanvas().style.cursor = '';
+      });
+
+      // Add airport markers ONLY for visited airports with full names
       visitedAirports.forEach(code => {
         if (airportCoordinates[code]) {
+          // Extract full airport name from the stored details
+          const fullName = airportDetails[code] ? airportDetails[code].split('(')[0].trim() : code;
+          
           const marker = new mapboxgl.Marker({
-            color: '#10b981'
+            color: '#000000',
+            scale: 0.8
           })
           .setLngLat(airportCoordinates[code])
-          .setPopup(new mapboxgl.Popup().setHTML(`<strong>${code}</strong>`))
+          .setPopup(new mapboxgl.Popup({
+            closeButton: true,
+            closeOnClick: false
+          }).setHTML(`
+            <div class="p-3 bg-gray-900 text-white rounded-lg">
+              <div class="font-bold text-lg text-white">${code}</div>
+              <div class="text-sm text-gray-300">${fullName}</div>
+            </div>
+          `))
           .addTo(map);
         }
       });
