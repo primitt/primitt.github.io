@@ -19,3 +19,7 @@ Date,"Flight number",From,To,"Dep time","Arr time",Duration,Airline,Aircraft,Reg
 2025-12-20,AA2769,"Phoenix / Sky Harbor (PHX/KPHX)","Orlando / Orlando (MCO/KMCO)",16:45:00,22:51:00,04:06:00,"American Airlines (AA/AAL)","Airbus A321 (A321)",N181UW,,0,0,0,,2315,1768,4,28
 2025-12-20,AA543,"Santa Ana / John Wayne-Orange Co (SNA/KSNA)","Phoenix / Sky Harbor (PHX/KPHX)",13:07:00,15:31:00,01:24:00,"American Airlines (AA/AAL)","Airbus A321neo (A21N)",N465AN,,0,0,0,,2726,2315,4,2128
 2025-12-29,AA1205,"Orlando / Orlando (MCO/KMCO)","Los Angeles / Los Angeles International (LAX/KLAX)",17:45:00,20:15:00,05:30:00,"American Airlines (AA/AAL)","Airbus A321 (A321)",N183UW,,0,0,0,,1768,1559,4,28
+2026-03-05,WN1495,"Santa Ana / John Wayne-Orange Co (SNA/KSNA)","San Jose / San Jose (SJC/KSJC)",16:30:00,17:55:00,01:25:00,"Southwest Airlines (WN/SWA)","Boeing 737-700 (B737)",,,0,0,0,,2726,2680,736,230
+2026-03-27,AA2285,"Santa Ana / John Wayne-Orange Co (SNA/KSNA)","Chicago / O'Hare (ORD/KORD)",11:41:00,17:50:00,04:09:00,"American Airlines (AA/AAL)","Boeing 737 MAX 8 (B38M)",N324RA,,0,0,0,,2726,2205,4,2123
+2026-04-01,AA2398,"Chicago / O'Hare (ORD/KORD)","Seattle / Seattle-Tacoma (SEA/KSEA)",10:01:00,12:47:00,04:46:00,"American Airlines (AA/AAL)","Boeing 737 MAX 8 (B38M)",N334SM,,0,0,0,,2205,2627,4,2123
+2026-04-05,AS759,"Seattle / Seattle-Tacoma (SEA/KSEA)","Santa Ana / John Wayne-Orange Co (SNA/KSNA)",08:25:00,11:19:00,02:54:00,"Alaska Airlines (AS/ASA)","Boeing 737-800 (B738)",N560AS,,0,0,0,,2627,2726,79,231
