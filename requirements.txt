@@ -5,3 +5,5 @@ python-dotenv
 markdown2
 peewee
 nextcord
+Pillow
+bleach

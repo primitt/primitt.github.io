@@ -1,0 +1,255 @@
+<html data-theme="black" lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.7/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="./scripts/particles.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css' rel='stylesheet' />
+    <meta charset="UTF-8" />
+    <meta name="google" content="notranslate" />
+    <meta http-equiv="Content-Language" content="en" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>ayonull</title>
+    <meta name="description" content="Primitt/ayonull's profile. Projects, blogs, experience & more." />
+    <meta property="og:title" content="ayonull" />
+    <meta property="og:description" content="Primitt/ayonull's profile. Projects, blogs, experience & more." />
+    <meta content="#858585" name="theme-color" />
+</head>
+<style>
+    .typing::after {
+        content: "|";
+        animation: blink 1s infinite;
+        margin-left: 3px;
+        display: inline-block;
+    }
+
+    @keyframes blink {
+        50% {
+            opacity: 0;
+        }
+    }
+
+    .background {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+    }
+
+    .window-control {
+        transition: all 0.1s ease;
+    }
+
+    .window-control:hover {
+        transform: scale(1.05);
+    }
+
+    .card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .overflow-auto::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    .overflow-auto::-webkit-scrollbar-track {
+        background: #1f2937;
+        border-radius: 6px;
+    }
+
+    .overflow-auto::-webkit-scrollbar-thumb {
+        background: #4b5563;
+        border-radius: 6px;
+        border: 2px solid #1f2937;
+    }
+
+    .overflow-auto::-webkit-scrollbar-thumb:hover {
+        background: #6b7280;
+    }
+
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .mapboxgl-ctrl-attrib,
+    .mapboxgl-ctrl-logo {
+        display: none !important;
+    }
+
+    .flight-popup .mapboxgl-popup-content {
+        background: transparent !important;
+        padding: 0 !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+    }
+
+    .flight-popup .mapboxgl-popup-tip {
+        border-top-color: #111827 !important;
+    }
+</style>
+
+<body>
+    <div id="particles-js" class="background"></div>
+    <main class="container mx-auto max-w-7xl px-4 py-8 md:py-12">
+        <a href="/" class="mb-8 inline-flex items-center gap-2 text-sm text-gray-400 transition hover:text-white">
+            <i class="fas fa-arrow-left"></i>
+            Back to home
+        </a>
+        <header class="mb-12 text-center">
+            <p class="mb-3 text-sm uppercase tracking-[0.3em] text-gray-500">Selected work</p>
+            <h1 class="text-5xl font-bold md:text-7xl">Photography</h1>
+        </header>
+
+        {% for series, series_photos in photos|groupby('series') %}
+        <section class="mb-14" aria-labelledby="series-{{ loop.index }}">
+            <div class="mb-5 border-b border-gray-700 pb-3">
+                <h2 id="series-{{ loop.index }}" class="text-2xl font-semibold md:text-3xl">{{ series }}</h2>
+            </div>
+            <div class="columns-1 gap-4 sm:columns-2 lg:columns-3">
+                {% for photo in series_photos %}
+                <figure class="group mb-4 break-inside-avoid overflow-hidden rounded-lg bg-base-200 shadow-xl">
+                    <button type="button" class="block w-full text-left" data-photo-src="{{ url_for('photography_image', name=photo.image) }}"
+                        data-photo-alt="{{ photo.small_desc or series }}" data-photo-series="{{ series }}" onclick="openPhotoModal(this)">
+                        <img src="{{ url_for('photography_image', name=photo.image) }}" alt="{{ photo.small_desc or series }}"
+                            class="h-auto w-full transition duration-300 group-hover:scale-105" loading="lazy">
+                    </button>
+                    {% if photo.small_desc %}
+                    <figcaption class="px-4 py-3 text-sm text-gray-300">{{ photo.small_desc }}</figcaption>
+                    {% endif %}
+                </figure>
+                {% endfor %}
+            </div>
+        </section>
+        {% else %}
+        <div class="py-20 text-center text-gray-400">
+            <p class="text-xl">No photographs have been added yet.</p>
+        </div>
+        {% endfor %}
+    </main>
+    <div id="photo-modal" class="fixed inset-0 z-50 hidden bg-black/90 p-4" role="dialog" aria-modal="true" aria-labelledby="photo-modal-title">
+        <div class="mx-auto flex h-full max-w-7xl flex-col">
+            <div class="mb-3 flex items-center justify-between gap-4 text-white">
+                <div>
+                    <p id="photo-modal-series" class="text-xs uppercase tracking-[0.3em] text-gray-400"></p>
+                    <h2 id="photo-modal-title" class="text-lg font-semibold"></h2>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button type="button" class="btn btn-sm" onclick="changePhotoZoom(-0.5)" aria-label="Zoom out"><i class="fas fa-search-minus"></i></button>
+                    <button id="photo-zoom-level" type="button" class="btn btn-sm" onclick="resetPhotoZoom()" aria-label="Reset zoom">100%</button>
+                    <button type="button" class="btn btn-sm" onclick="changePhotoZoom(0.5)" aria-label="Zoom in"><i class="fas fa-search-plus"></i></button>
+                    <button type="button" class="btn btn-sm btn-ghost" onclick="closePhotoModal()" aria-label="Close photo"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+            <div id="photo-modal-viewport" class="flex flex-1 touch-none items-center justify-center overflow-hidden rounded-lg bg-black cursor-grab">
+                <img id="photo-modal-image" class="max-h-full max-w-full object-contain transition-transform duration-150" alt="">
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    let photoZoom = 1;
+    let photoTrigger = null;
+    let photoPan = { x: 0, y: 0 };
+    let photoPointer = null;
+
+    function updatePhotoZoom() {
+        const image = document.getElementById('photo-modal-image');
+        image.style.transform = `translate(${photoPan.x}px, ${photoPan.y}px) scale(${photoZoom})`;
+        document.getElementById('photo-zoom-level').textContent = `${Math.round(photoZoom * 100)}%`;
+    }
+
+    function constrainPhotoPan() {
+        const image = document.getElementById('photo-modal-image');
+        const viewport = document.getElementById('photo-modal-viewport');
+        const maxX = Math.max(0, (image.clientWidth * photoZoom - viewport.clientWidth) / 2);
+        const maxY = Math.max(0, (image.clientHeight * photoZoom - viewport.clientHeight) / 2);
+        photoPan.x = Math.min(maxX, Math.max(-maxX, photoPan.x));
+        photoPan.y = Math.min(maxY, Math.max(-maxY, photoPan.y));
+    }
+
+    function openPhotoModal(trigger) {
+        photoTrigger = trigger;
+        document.getElementById('photo-modal-image').src = trigger.dataset.photoSrc;
+        document.getElementById('photo-modal-image').alt = trigger.dataset.photoAlt;
+        document.getElementById('photo-modal-title').textContent = trigger.dataset.photoAlt;
+        document.getElementById('photo-modal-series').textContent = trigger.dataset.photoSeries;
+        document.getElementById('photo-modal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        resetPhotoZoom();
+    }
+
+    function closePhotoModal() {
+        document.getElementById('photo-modal').classList.add('hidden');
+        document.body.style.overflow = '';
+        photoTrigger?.focus();
+    }
+
+    function changePhotoZoom(amount) {
+        photoZoom = Math.min(4, Math.max(0.5, photoZoom + amount));
+        constrainPhotoPan();
+        updatePhotoZoom();
+    }
+
+    function resetPhotoZoom() {
+        photoZoom = 1;
+        photoPan = { x: 0, y: 0 };
+        updatePhotoZoom();
+    }
+
+    const photoViewport = document.getElementById('photo-modal-viewport');
+
+    photoViewport.addEventListener('pointerdown', (event) => {
+        if (photoZoom <= 1) return;
+        event.preventDefault();
+        photoPointer = { id: event.pointerId, x: event.clientX, y: event.clientY };
+        photoViewport.setPointerCapture(event.pointerId);
+        photoViewport.classList.replace('cursor-grab', 'cursor-grabbing');
+        document.getElementById('photo-modal-image').classList.remove('duration-150');
+    });
+
+    photoViewport.addEventListener('pointermove', (event) => {
+        if (!photoPointer || event.pointerId !== photoPointer.id) return;
+        photoPan.x += event.clientX - photoPointer.x;
+        photoPan.y += event.clientY - photoPointer.y;
+        photoPointer.x = event.clientX;
+        photoPointer.y = event.clientY;
+        constrainPhotoPan();
+        updatePhotoZoom();
+    });
+
+    function stopPhotoPan(event) {
+        if (!photoPointer || event.pointerId !== photoPointer.id) return;
+        photoViewport.releasePointerCapture(event.pointerId);
+        photoPointer = null;
+        photoViewport.classList.replace('cursor-grabbing', 'cursor-grab');
+        document.getElementById('photo-modal-image').classList.add('duration-150');
+    }
+
+    photoViewport.addEventListener('pointerup', stopPhotoPan);
+    photoViewport.addEventListener('pointercancel', stopPhotoPan);
+
+    document.getElementById('photo-modal').addEventListener('click', (event) => {
+        if (event.target.id === 'photo-modal') closePhotoModal();
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !document.getElementById('photo-modal').classList.contains('hidden')) {
+            closePhotoModal();
+        }
+    });
+
+    particlesJS.load("particles-js", "scripts/particles.json", function () {
+        console.log("callback - particles.js config loaded");
+    });
+</script>
+
+</html>

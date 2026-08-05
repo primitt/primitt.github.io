@@ -8,7 +8,6 @@
     crossorigin="anonymous"></script>
   <script src="./scripts/particles.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Mapbox GL JS -->
   <script src='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js'></script>
   <link href='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css' rel='stylesheet' />
   <meta charset="UTF-8" />
@@ -16,7 +15,6 @@
   <meta http-equiv="Content-Language" content="en" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>ayonull</title>
-  <!-- add meta tags for discord -->
   <meta name="description" content="Primitt/ayonull's profile. Projects, blogs, experience & more." />
   <meta property="og:title" content="ayonull" />
   <meta property="og:description" content="Primitt/ayonull's profile. Projects, blogs, experience & more." />
@@ -43,7 +41,6 @@
     z-index: -1;
   }
 
-  /* Windows-style window controls */
   .window-control {
     transition: all 0.1s ease;
   }
@@ -52,12 +49,10 @@
     transform: scale(1.05);
   }
 
-  /* Simplified card hover effects */
   .card:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 
-  /* Custom scrollbar for Windows feel */
   .overflow-auto::-webkit-scrollbar {
     width: 12px;
   }
@@ -77,7 +72,6 @@
     background: #6b7280;
   }
 
-  /* Line clamp utility */
   .line-clamp-3 {
     display: -webkit-box;
     -webkit-line-clamp: 3;
@@ -86,13 +80,11 @@
     overflow: hidden;
   }
 
-  /* Hide Mapbox attribution */
   .mapboxgl-ctrl-attrib,
   .mapboxgl-ctrl-logo {
     display: none !important;
   }
 
-  /* Custom styling for flight popups */
   .flight-popup .mapboxgl-popup-content {
     background: transparent !important;
     padding: 0 !important;
@@ -108,11 +100,9 @@
 <body>
   <div id="particles-js" class="background"></div>
   
-  <!-- Top Profile Section (full screen) -->
   <div class="container mx-auto px-4 pb-8 max-w-7xl">
     <div class="h-[92vh] flex items-center justify-center relative mt-8 mb-5">
     <div class="card bg-base-200 absolute inset-0 flex flex-col justify-center items-center text-center px-4 pb-8">
-      <!-- Main content centered -->
       <div class="flex-1 flex flex-col justify-center items-center max-w-4xl">
         <p class="text-lg mb-4 text-gray-300">Hi! I am</p>
         <div class="flex items-center justify-center gap-3 mb-6">
@@ -122,7 +112,6 @@
           <img src="./images/1f1fa-1f1f8.svg" width="50px" class="ml-2" />
         </div>
         
-        <!-- Social links centered under name -->
         <div class="flex gap-6 text-3xl mb-8">
           <a href="https://github.com/primitt" class="text-gray-300 hover:text-white transition-colors">
             <i class="fab fa-github"></i>
@@ -139,7 +128,6 @@
         </div>
       </div>
       
-      <!-- Description at bottom -->
       <div class="absolute bottom-20 left-1/2 hidden md:block transform -translate-x-1/2 max-w-full md:max-w-2xl md:px-4">
         <p class="text-gray-300 md:text-lg leading-relaxed text-center">
           Motivated and dedicated high school student, highly driven to research, learn, and apply new and advanced
@@ -155,9 +143,7 @@
       <p class="text-gray-500 mt-2">Scroll down to explore my projects, blogs, and more!</p>
     </div>
   </div>
-    <!-- 3 columns layout - responsive grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-5">
-      <!-- First Column -->
       <div class="flex flex-col gap-5">
         <div class="card w-full bg-base-200 shadow-xl" id="languagespage">
           <div class="card-body">
@@ -209,7 +195,6 @@
               </div>
             </div>
 
-            <!-- Fallback when no music is playing -->
             <div id="spotify-fallback" class="hidden text-center py-6">
               <div class="text-4xl mb-3">🎵</div>
               <p class="text-gray-400 italic">Nothing playing right now</p>
@@ -219,7 +204,6 @@
         </div>
       </div>
 
-      <!-- Second Column - Projects -->
       <div class="card w-full bg-base-200 shadow-xl" id="projectspage">
         <div class="card-body">
           <div class="text-2xl">
@@ -253,7 +237,6 @@
         </div>
       </div>
 
-      <!-- Third Column - Blog -->
       <div class="card w-full bg-base-200 shadow-xl" id="blogspage">
         <div class="card-body">
           <div class="text-2xl">
@@ -291,7 +274,6 @@
       </div>
     </div>
 
-    <!-- Photography Section - Full width -->
     <div class="w-full">
       <div class="card w-full bg-base-200 shadow-xl" id="photographypage">
         <div class="card-body">
@@ -299,18 +281,26 @@
             <p class="font-bold">Photography</p>
             <p class="text-sm text-gray-500">Photos I have taken over the years</p>
           </div>
-          <div class="text-center py-8">
-            <div class="text-6xl mb-4">📸</div>
-            <p class="text-gray-400 italic">coming soon...</p>
+          {% if photos %}
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {% for photo in photos %}
+            <a href="{{ url_for('photography') }}" class="group overflow-hidden rounded-lg bg-base-300">
+              <img src="{{ url_for('photography_thumbnail', name=photo.image) }}" alt="{{ photo.small_desc or photo.series }}"
+                class="aspect-[4/3] w-full object-cover transition duration-300 group-hover:scale-105" loading="lazy">
+              <span class="block px-3 py-2 text-sm text-gray-300">{{ photo.series }}</span>
+            </a>
+            {% endfor %}
           </div>
-        </div>
-        <div class="hidden card-actions justify-center p-4 border-t border-gray-600">
-          <button id="expand-photography" class="btn btn-sm btn-outline" onclick="togglePhotographyExpand()">Expand</button>
+          <div class="card-actions justify-center pt-4">
+            <a href="{{ url_for('photography') }}" class="btn btn-outline btn-sm">View more</a>
+          </div>
+          {% else %}
+          <p class="py-8 text-center text-gray-400 italic">No photographs have been added yet.</p>
+          {% endif %}
         </div>
       </div>
     </div>
 
-    <!-- Recent Flights Section - Full width -->
     <div class="w-full mt-5">
       <div class="card w-full bg-base-200 shadow-xl" id="flightspage">
         <div class="card-body">
@@ -322,10 +312,8 @@
             <p class="text-sm text-gray-500">Where I've been flying recently</p>
           </div>
           
-          <!-- Map container -->
           <div id="flights-map" class="w-full h-96 rounded-lg bg-gray-800 mb-4"></div>
           
-          <!-- Flight stats -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div class="bg-base-300 rounded-lg p-4 text-center">
               <div class="text-2xl font-bold text-blue-400" id="total-flights">-</div>
@@ -337,7 +325,6 @@
             </div>
           </div>
 
-          <!-- Recent flights list -->
           <div id="recent-flights-list" class="space-y-2">
             <div class="text-center py-4">
               <i class="fas fa-spinner fa-spin text-gray-400"></i>
@@ -354,7 +341,6 @@
   </div>
   <div id="blogspage-expanded" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm">
     <div class="w-full h-full bg-base-200 shadow-2xl border border-gray-600 flex flex-col">
-      <!-- Windows-style title bar -->
       <div class="bg-base-300 border-b border-gray-600 px-4 py-2 flex items-center justify-between select-none">
         <div class="flex items-center gap-3">
           <span class="text-lg font-semibold text-white">All Blog Posts</span>
@@ -367,7 +353,6 @@
         </div>
       </div>
 
-      <!-- Content area -->
       <div class="flex-1 overflow-auto p-6 bg-base-200">
         <div class="max-w-4xl mx-auto">
           {% if blogs %}
@@ -419,10 +404,8 @@
     </div>
   </div>
 
-  <!-- Expanded full-projects panel (hidden by default) -->
   <div id="projectspage-expanded" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm">
     <div class="w-full h-full bg-base-200 shadow-2xl border border-gray-600 flex flex-col">
-      <!-- Windows-style title bar -->
       <div class="bg-base-300 border-b border-gray-600 px-4 py-2 flex items-center justify-between select-none">
         <div class="flex items-center gap-3">
           <span class="text-lg font-semibold text-white">All Projects</span>
@@ -435,7 +418,6 @@
         </div>
       </div>
 
-      <!-- Content area -->
       <div class="flex-1 overflow-auto p-6 bg-base-200">
         <div class="max-w-6xl mx-auto">
           <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
@@ -495,10 +477,8 @@
     </div>
   </div>
 
-  <!-- Expanded full-photography panel (hidden by default) -->
   <div id="photographypage-expanded" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm">
     <div class="w-full h-full bg-base-200 shadow-2xl border border-gray-600 flex flex-col">
-      <!-- Windows-style title bar -->
       <div class="bg-base-300 border-b border-gray-600 px-4 py-2 flex items-center justify-between select-none">
         <div class="flex items-center gap-3">
           <span class="text-lg font-semibold text-white">All Photography</span>
@@ -511,7 +491,6 @@
         </div>
       </div>
 
-      <!-- Content area -->
       <div class="flex-1 overflow-auto p-6 bg-base-200">
         <div class="max-w-6xl mx-auto">
           <div class="text-center py-20">
@@ -524,10 +503,8 @@
     </div>
   </div>
 
-  <!-- Expanded full-flights panel (hidden by default) -->
   <div id="flightspage-expanded" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm">
     <div class="w-full h-full bg-base-200 shadow-2xl border border-gray-600 flex flex-col">
-      <!-- Windows-style title bar -->
       <div class="bg-base-300 border-b border-gray-600 px-4 py-2 flex items-center justify-between select-none">
         <div class="flex items-center gap-3">
           <span class="text-lg font-semibold text-white">All Flights</span>
@@ -540,13 +517,10 @@
         </div>
       </div>
 
-      <!-- Content area -->
       <div class="flex-1 overflow-auto p-6 bg-base-200">
         <div class="max-w-6xl mx-auto">
-          <!-- Full map for expanded view -->
           <div id="flights-map-expanded" class="w-full h-96 rounded-lg bg-gray-800 mb-6"></div>
           
-          <!-- All flights list -->
           <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             <div id="all-flights-list" class="col-span-full">
               <div class="text-center py-4">
@@ -563,7 +537,6 @@
   </div>
 
   <script>
-    // Simplified toggle functions without animations
     function toggleProjectsExpand() {
       const expanded = document.getElementById('projectspage-expanded');
       const isHidden = expanded.classList.contains('hidden');
@@ -610,11 +583,9 @@
       if (isHidden) {
         expanded.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
-        // Initialize expanded map if not already done
         if (!window.expandedFlightsMap) {
           initializeExpandedFlightsMap();
         }
-        // Populate all flights list
         populateAllFlightsList();
       } else {
         expanded.classList.add('hidden');
@@ -624,7 +595,6 @@
   </script>
 </body>
 <script>
-  // This code is sadly not mine. I have no idea where I got this from (I got this from another project of mine), but it's not mine. So... credit to whoever made this, thank u, love u <3!
   const phrases = ["Priansh","primitt"];
   let phraseIndex = 0;
   let charIndex = 0;
@@ -654,7 +624,6 @@
   particlesJS.load("particles-js", "scripts/particles.json", function () {
     console.log("callback - particles.js config loaded");
   });
-  // Spotify Integration
   function updateSpotifyStatus() {
     fetch('/api/spotify/current-track')
       .then(response => response.json())
@@ -680,13 +649,11 @@
     const track = data.item;
     const albumArt = document.getElementById('album-art');
 
-    // Update track info
     document.getElementById('track-name').textContent = track.name;
     document.getElementById('artist-name').textContent = track.artists.map(a => a.name).join(', ');
     document.getElementById('album-name').textContent = track.album.name;
     document.getElementById('spotify-link').href = track.external_urls.spotify;
 
-    // Update album art
     if (track.album.images && track.album.images.length > 0) {
       albumArt.innerHTML = `<img src="${track.album.images[0].url}" class="w-16 h-16 rounded-lg object-cover" alt="Album Art">`;
     }
@@ -704,19 +671,15 @@
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   }
 
-  // Initialize Spotify status
   updateSpotifyStatus();
 
-  // Update every 30 seconds
   setInterval(updateSpotifyStatus, 30000);
 
-  // Flights Integration
   let flightsData = [];
   let flightsMap = null;
   let expandedFlightsMap = null;
   let airportCoordinates = {};
 
-  // Load airport coordinates from database
   function loadAirportDatabase() {
     return fetch('/scripts/airport_db.txt')
       .then(response => response.text())
@@ -727,13 +690,12 @@
         lines.forEach(line => {
           const parts = line.split(':');
           if (parts.length >= 16) {
-            const iataCode = parts[1]; // IATA code is the second field
-            const lat = parseFloat(parts[parts.length - 2]); // Second to last field
-            const lng = parseFloat(parts[parts.length - 1]); // Last field
+            const iataCode = parts[1];
+            const lat = parseFloat(parts[parts.length - 2]);
+            const lng = parseFloat(parts[parts.length - 1]);
             
-            // Only add if we have valid coordinates and IATA code
             if (iataCode && iataCode !== 'N/A' && !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0) {
-              coords[iataCode] = [lng, lat]; // [longitude, latitude] format for Mapbox
+              coords[iataCode] = [lng, lat];
             }
           }
         });
@@ -744,19 +706,18 @@
       })
       .catch(error => {
         console.error('Error loading airport database:', error);
-        // Fallback to hardcoded coordinates
         airportCoordinates = {
-          'SJC': [-121.9289, 37.3626], // San Jose
-          'SNA': [-117.8682, 33.6757], // John Wayne Orange County
-          'LAX': [-118.4085, 33.9425], // Los Angeles
-          'YYZ': [-79.6248, 43.6777], // Toronto Pearson
-          'YUL': [-73.7408, 45.4706], // Montreal
-          'OGG': [-156.4306, 20.8987], // Kahului
-          'LHR': [-0.4614, 51.4700], // London Heathrow
-          'NCE': [7.2658, 43.6584], // Nice
-          'LGW': [-0.1902, 51.1481], // London Gatwick
-          'ORD': [-87.9073, 41.9742], // Chicago O'Hare
-          'BCN': [2.0833, 41.2974] // Barcelona
+          'SJC': [-121.9289, 37.3626],
+          'SNA': [-117.8682, 33.6757],
+          'LAX': [-118.4085, 33.9425],
+          'YYZ': [-79.6248, 43.6777],
+          'YUL': [-73.7408, 45.4706],
+          'OGG': [-156.4306, 20.8987],
+          'LHR': [-0.4614, 51.4700],
+          'NCE': [7.2658, 43.6584],
+          'LGW': [-0.1902, 51.1481],
+          'ORD': [-87.9073, 41.9742],
+          'BCN': [2.0833, 41.2974]
         };
         return airportCoordinates;
       });
@@ -785,7 +746,6 @@
   }
 
   function loadFlightsData() {
-    // Load airport database first, then flight data
     loadAirportDatabase().then(() => {
       return fetch('/scripts/flight_info.csv');
     })
@@ -803,12 +763,10 @@
   }
 
   function updateFlightsUI() {
-    // Update stats
     document.getElementById('total-flights').textContent = flightsData.length;
     
     const countries = new Set();
     flightsData.forEach(flight => {
-      // Simple country detection - you might want to make this more sophisticated
       const fromCode = getAirportCode(flight.From);
       const toCode = getAirportCode(flight.To);
       if (fromCode && fromCode.startsWith('Y')) countries.add('Canada');
@@ -821,7 +779,6 @@
     
     document.getElementById('countries-visited').textContent = countries.size;
 
-    // Show recent flights (last 5)
     const recentFlights = flightsData.slice(0, 5);
     const flightsList = document.getElementById('recent-flights-list');
     
@@ -857,7 +814,6 @@
   function initializeFlightsMap() {
     mapboxgl.accessToken = 'pk.eyJ1IjoiYXlvbnVsbCIsImEiOiJjbWhpcnhvbmgweHA4MmxwdTFyMGJvY2hlIn0.3cNXJSBeHkJjj5X0YIR6xw';
     
-    // Check if Mapbox GL JS is loaded
     if (typeof mapboxgl === 'undefined') {
       console.error('Mapbox GL JS not loaded');
       document.getElementById('flights-map').innerHTML = 
@@ -876,7 +832,7 @@
       flightsMap = new mapboxgl.Map({
         container: 'flights-map',
         style: 'mapbox://styles/mapbox/dark-v11',
-        center: [-98.5795, 39.8283], // Center of US
+        center: [-98.5795, 39.8283],
         zoom: 3
       });
 
@@ -940,23 +896,20 @@
 
   function addFlightPaths(map) {
     const features = [];
-    const visitedAirports = new Set(); // Track airports actually visited
-    const airportDetails = {}; // Store airport details for popups
+    const visitedAirports = new Set();
+    const airportDetails = {};
     
     flightsData.forEach((flight, index) => {
       const fromCode = getAirportCode(flight.From);
       const toCode = getAirportCode(flight.To);
       
       if (fromCode && toCode && airportCoordinates[fromCode] && airportCoordinates[toCode]) {
-        // Track visited airports
         visitedAirports.add(fromCode);
         visitedAirports.add(toCode);
         
-        // Store airport details for popups
         airportDetails[fromCode] = flight.From;
         airportDetails[toCode] = flight.To;
         
-        // Add flight path
         features.push({
           type: 'Feature',
           properties: {
@@ -1004,7 +957,6 @@
         }
       });
 
-      // Add click event for flight paths
       map.on('click', 'flight-paths', (e) => {
         const properties = e.features[0].properties;
         
@@ -1037,7 +989,6 @@
         .addTo(map);
       });
 
-      // Change cursor on hover
       map.on('mouseenter', 'flight-paths', () => {
         map.getCanvas().style.cursor = 'pointer';
       });
@@ -1046,10 +997,8 @@
         map.getCanvas().style.cursor = '';
       });
 
-      // Add airport markers ONLY for visited airports with full names
       visitedAirports.forEach(code => {
         if (airportCoordinates[code]) {
-          // Extract full airport name from the stored details
           const fullName = airportDetails[code] ? airportDetails[code].split('(')[0].trim() : code;
           
           const marker = new mapboxgl.Marker({
@@ -1080,7 +1029,6 @@
       return;
     }
 
-    // Create a grid of all flights
     allFlightsList.innerHTML = `
       <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         ${flightsData.map(flight => {
@@ -1134,7 +1082,6 @@
     `;
   }
 
-  // Initialize flights when page loads
   loadFlightsData();
 </script>
 

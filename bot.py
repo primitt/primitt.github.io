@@ -3,12 +3,18 @@ import nextcord
 from nextcord import SlashOption
 from nextcord.ext import commands
 from dotenv import load_dotenv
-from db.db import Projects, Blogs
+from db.db import Projects, Blogs, Photography
 import datetime
 import os
 import requests
+import uuid
 
 load_dotenv()
+
+DISCORD_ADMIN_USER_IDS = {
+    int(user_id) for user_id in os.getenv('DISCORD_ADMIN_USER_IDS', '').split(',')
+    if user_id.strip().isdigit()
+}
 
 bot = commands.Bot(command_prefix=["Mi!", "mi!"],
                    intents=nextcord.Intents.all())
@@ -20,6 +26,12 @@ status_mapping = {
     "Inactive": 4,
     "Active": 5
 }
+
+async def require_admin(interaction):
+    if interaction.user.id in DISCORD_ADMIN_USER_IDS:
+        return True
+    await interaction.response.send_message("You are not authorized to manage site content.", ephemeral=True)
+    return False
 
 @bot.event
 async def on_ready():
@@ -54,6 +66,8 @@ async def create_project(
     ),
     link: Optional[str] = None
 ):
+    if not await require_admin(interaction):
+        return
     project = Projects.create(
         name=name,
         description=description,
@@ -71,6 +85,8 @@ async def delete_project(
     interaction,
     project_id: int
 ):
+    if not await require_admin(interaction):
+        return
     project = Projects.get_or_none(Projects.id == project_id)
     if project:
         project.delete_instance()
@@ -94,6 +110,8 @@ async def edit_project(
         required=False
     )
 ):
+    if not await require_admin(interaction):
+        return
     project = Projects.get_or_none(Projects.id == project_id)
     if not project:
         await interaction.response.send_message(f"Project with ID {project_id} not found.")
@@ -134,6 +152,8 @@ async def create_blog(
     hero_image: str = None,
     file: nextcord.Attachment = None
 ):
+    if not await require_admin(interaction):
+        return
     # If no content is provided but a file is uploaded, use file content
     if content is None and file:
         try:
@@ -171,6 +191,8 @@ async def edit_blog(
     hero_image: str = None,
     file: nextcord.Attachment = None
 ):
+    if not await require_admin(interaction):
+        return
     blog = Blogs.get_or_none(Blogs.id == blog_id)
     if not blog:
         await interaction.response.send_message(f"Blog with ID {blog_id} not found.")
@@ -208,6 +230,8 @@ async def delete_blog(
     interaction,
     blog_id: int
 ):
+    if not await require_admin(interaction):
+        return
     blog = Blogs.get_or_none(Blogs.id == blog_id)
     if not blog:
         await interaction.response.send_message(f"Blog with ID {blog_id} not found.")
@@ -215,6 +239,90 @@ async def delete_blog(
 
     blog.delete_instance()
     await interaction.response.send_message(f"Blog {blog_id} - '{blog.title}' deleted successfully.")
+@bot.slash_command(name="up_photography", description="Upload photos to a photography series")
+async def up_photography(
+    interaction,
+    series: str,
+    image: nextcord.Attachment,
+    image_2: nextcord.Attachment = None,
+    image_3: nextcord.Attachment = None,
+    image_4: nextcord.Attachment = None,
+    image_5: nextcord.Attachment = None,
+    image_6: nextcord.Attachment = None,
+    image_7: nextcord.Attachment = None,
+    image_8: nextcord.Attachment = None,
+    image_9: nextcord.Attachment = None,
+    image_10: nextcord.Attachment = None,
+    small_desc: str = None,
+):
+    if not await require_admin(interaction):
+        return
+    attachments = [
+        attachment for attachment in [
+            image, image_2, image_3, image_4, image_5,
+            image_6, image_7, image_8, image_9, image_10,
+        ] if attachment
+    ]
+    entries = []
 
+    for attachment in attachments:
+        filename = f"{uuid.uuid4().hex}_{os.path.basename(attachment.filename)}"
+        await attachment.save(f"images/{filename}")
+        entries.append(Photography.create(
+            series=series,
+            image=filename,
+            small_desc=small_desc,
+        ))
 
+    await interaction.response.send_message(
+        f"Created {len(entries)} photography entries in '{series}': "
+        + ", ".join(str(entry.id) for entry in entries)
+    )
+
+@bot.slash_command(name="delete_photography", description="Delete a photography entry by ID")
+async def delete_photography(
+    interaction,
+    photography_id: int
+):
+    if not await require_admin(interaction):
+        return
+    photography_entry = Photography.get_or_none(Photography.id == photography_id)
+    if not photography_entry:
+        await interaction.response.send_message(f"Photography entry with ID {photography_id} not found.")
+        return
+
+    image_path = f"images/{photography_entry.image}"
+    if os.path.exists(image_path):
+        os.remove(image_path)
+
+    photography_entry.delete_instance()
+    await interaction.response.send_message(f"Photography entry {photography_id} - '{photography_entry.series}' deleted successfully.")
+
+@bot.slash_command(name="list_photography", description="List all photography entries by series")
+async def list_photography(
+    interaction,
+    series: str = SlashOption(
+        name="series",
+        description="Select a series",
+        choices=list(set(entry.series for entry in Photography.select())),
+        required=True
+    )
+):
+    entries = Photography.select().where(Photography.series == series)
+    if not entries:
+        await interaction.response.send_message(f"No photography entries found for series '{series}'.")
+        return
+
+    response = "\n".join([f"{entry.id}: {entry.image} - {entry.small_desc or 'No description'}" for entry in entries])
+    await interaction.response.send_message(f"```Photography entries for series '{series}':\n{response}```")
+
+@bot.slash_command(name="list_series", description="List all unique photography series")
+async def list_series(interaction):
+    series_list = set(entry.series for entry in Photography.select())
+    if not series_list:
+        await interaction.response.send_message("No photography series found.")
+        return
+
+    response = "\n".join(series_list)
+    await interaction.response.send_message(f"```Photography series:\n{response}```")
 bot.run(os.getenv("DISCORD_TOKEN"))

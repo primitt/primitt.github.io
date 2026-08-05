@@ -30,8 +30,13 @@ class Blogs(BaseModel):
         table_name = 'blogs'
         primary_key = False
 
+class Photography(BaseModel):
+    id = AutoField()
+    series = TextField()
+    image = TextField()
+    small_desc = TextField(null=True)
 
 if __name__ == '__main__':
     database.connect()
-    database.create_tables([Projects, Blogs])
+    database.create_tables([Projects, Blogs, Photography])
     database.close()
