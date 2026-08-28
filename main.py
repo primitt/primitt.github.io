@@ -181,6 +181,8 @@ def build_thumbnail(image_path, modified_at):
             output = BytesIO()
             image.save(output, 'JPEG', quality=60, optimize=True)
             return output.getvalue()
-
+@app.route("/resume")
+def resume():
+    return send_file("scripts/resume.pdf", mimetype="application/pdf")
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port="5001")
