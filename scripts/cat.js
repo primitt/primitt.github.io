@@ -123,17 +123,22 @@ function hindLeg(id, top, p, kneeO, hockO) {
   return [cap(id, top, knee, 26, 15), cap(id, knee, hock, 13, 11), cap(id, hock, [p[0] + 5, p[1] - 7], 11)];
 }
 
-function parts(rig, time) {
+// look: cat-space px the head leans toward the pointer; poked: ms since the cat was last tapped.
+function parts(rig, time, { look = [0, 0], poked = Infinity } = {}) {
   const br = Math.sin(time / 700) * rig.breath;
   const up = p => [p[0], p[1] + br];
-  const H = up(rig.H), C = up(rig.C), Hd = up(rig.Hd), haunch = up(rig.haunch), chest = up(rig.chest);
+  // A tap makes the head bob up, the ear flick and the tail swish for a moment.
+  const bob = poked < 800 ? Math.sin((poked / 800) * Math.PI) * 8 : 0;
+  const H = up(rig.H), C = up(rig.C), haunch = up(rig.haunch), chest = up(rig.chest);
+  const Hd = [rig.Hd[0] + look[0], rig.Hd[1] + br + look[1] - bob];
   const fTop = up(rig.fTop), hTop = up(rig.hTop);
-  const flickT = time % 3700, flick = flickT < 260 ? Math.sin((flickT / 260) * Math.PI) : 0;
+  const flickT = time % 3700;
+  const flick = Math.max(flickT < 260 ? Math.sin((flickT / 260) * Math.PI) : 0, poked < 500 ? Math.sin((poked / 500) * Math.PI) : 0);
 
   // Tail: a cubic bezier of tapering segments. The tip wanders on smooth noise, so it never loops:
   // lazy sways, the middle bending on its own, the tip lifting, and now and then a burst of quick flicks.
   const ts = time / 1000;
-  const flicking = Math.max(0, noise1(ts * 0.3, 5) - 0.45) * 1.8;
+  const flicking = Math.max(0, noise1(ts * 0.3, 5) - 0.45) * 1.8 + (poked < 1500 ? 1 - poked / 1500 : 0);
   const sway = rig.sway * 1.4 * (0.75 * noise1(ts * 0.6, 1) + 0.25 * noise1(ts * 2.2, 2) + flicking * Math.sin(time / 110) * 0.5);
   const mid = rig.sway * 0.4 * noise1(ts * 0.45, 7), lift = rig.sway * 0.6 * noise1(ts * 0.35, 9);
   const T = [rig.t0, rig.t1, rig.t2, rig.t3].map((o, i) =>
@@ -162,7 +167,7 @@ function parts(rig, time) {
     ...frontLeg(20, [fTop[0] + 16, fTop[1]], rig.ffp),
     ...hindLeg(21, [hTop[0] + 16, hTop[1]], rig.fhp, rig.knee, rig.hock),
   ];
-  return { near, far, H, Hd, squint: rig.squint > 0.85, eye: [Hd[0] + 20, Hd[1] - 6], nose: [Hd[0] + 48, Hd[1] + 6] };
+  return { near, far, H, Hd, squint: rig.squint > 0.85, eye: [Hd[0] + 20 + look[0] * 0.5, Hd[1] - 6 + look[1] * 0.5], nose: [Hd[0] + 42, Hd[1] + 8] };
 }
 
 // Signed distance to a set of parts (smooth-blended if k), recording the closest part in `hit`.
@@ -218,8 +223,8 @@ function skinOf(part, x, y, P) {
 const SUB = [[0.25, 0.25], [0.75, 0.25], [0.25, 0.75], [0.75, 0.75]];
 
 // Set up `canvas` as a cols x rows grid. Returns draw(rig, time, opts), where opts places the cat:
-// x = canvas x of the cat's middle, ground = canvas y of its paws, dir = 1 (facing right) or -1,
-// plus blink and zzz (sleeping z's). scale shrinks the cat while cells stay the same size.
+// x = canvas x of the cat's middle, ground = canvas y of its paws, dir = 1 (facing right) or -1 (in between
+// squashes it, for turning round), plus blink, zzz (sleeping z's), look and poked (see parts). scale shrinks the cat while cells stay the same size.
 function create(canvas, cols, rows, scale = 1) {
   const dpr = Math.min(window.devicePixelRatio || 1, 2), N = cols * rows;
   canvas.width = cols * CW * dpr;
@@ -233,16 +238,17 @@ function create(canvas, cols, rows, scale = 1) {
   ctx.textBaseline = "middle";
   const cellGlyph = new Array(N), cellColor = new Array(N), cellAlpha = new Float32Array(N);
   const cellTile = new Array(N), cellTileAlpha = new Float32Array(N), cellShadow = new Uint8Array(N);
-  const eyeR = Math.max(8, (0.55 * CW) / scale), noseR = Math.max(7, (0.5 * CW) / scale);
 
-  return function draw(rig, time, { x: ox, ground, dir = 1, blink = false, zzz = false }) {
-    const t = time / 1000, P = parts(rig, time);
-    const lx = x => ((x - ox) * dir) / scale, ly = y => (y - ground) / scale + GROUND;
+  return function draw(rig, time, { x: ox, ground, dir = 1, blink = false, zzz = false, look, poked = Infinity }) {
+    const t = time / 1000, P = parts(rig, time, { look, poked });
+    const lx = x => (x - ox) / (scale * dir), ly = y => (y - ground) / scale + GROUND;
     const cellOf = (px, py) => {
       const c = Math.floor((ox + px * scale * dir) / CW), r = Math.floor((ground + (py - GROUND) * scale) / CH);
       return c < 0 || r < 0 || c >= cols || r >= rows ? -1 : r * cols + c;
     };
     cellGlyph.fill(""); cellTileAlpha.fill(0); cellShadow.fill(0);
+    // The eye and nose each take exactly the one cell under their point, so they never fall between cells.
+    const eyeCell = cellOf(...P.eye), noseCell = cellOf(...P.nose);
 
     // The cat spans roughly 300 cat-space px either side of its middle; skip columns beyond that.
     const c0 = Math.max(0, Math.floor((ox - 320 * scale) / CW)), c1 = Math.min(cols - 1, Math.ceil((ox + 320 * scale) / CW));
@@ -261,7 +267,7 @@ function create(canvas, cols, rows, scale = 1) {
         field(x, y, isFar ? P.far : P.near, 12);
         const part = hit.part, i = r * cols + c;
         const skin = skinOf(part, x, y, P);
-        const facing = (-0.6 * hit.nx * dir - 0.8 * hit.ny) * hit.across; // lit from the top-left
+        const facing = (-0.6 * hit.nx * Math.sign(dir) - 0.8 * hit.ny) * hit.across; // lit from the top-left
         const lum = clamp(0.22 + 0.5 * Math.sqrt(1 - hit.across * hit.across) + 0.18 * facing);
         let tile;
         if (skin === ACCENT) {
@@ -285,9 +291,9 @@ function create(canvas, cols, rows, scale = 1) {
           if (glint) tile = mix(tile, BG, 0.45);
 
           if (part.id === 4 || part.id === 5) {
-            if (Math.hypot(x - P.eye[0], y - P.eye[1]) < eyeR) {
+            if (i === eyeCell) {
               tile = mix(BG, EYE, 0.85); glyph = blink || P.squint ? "-" : "0"; color = IRIS; alpha = 1;
-            } else if (Math.hypot(x - P.nose[0], y - P.nose[1]) < noseR) {
+            } else if (i === noseCell) {
               tile = mix(BG, NOSE, 0.9); glyph = "v"; color = shade(NOSE, INK); alpha = 1;
             }
           }
@@ -332,6 +338,12 @@ function create(canvas, cols, rows, scale = 1) {
       const age = ((t + k * 0.9) % 2.7) / 2.7;
       const i = cellOf(P.Hd[0] + 20 + age * 60, P.Hd[1] - 70 - age * 90);
       if (i >= 0 && empty(i)) at(i, age < 0.4 ? "z" : "Z", WHITE, DIM * Math.sin(age * Math.PI));
+    }
+
+    // A tap on an awake cat sends a little heart up from its head.
+    if (poked < 1600 && !zzz) {
+      const age = poked / 1600, i = cellOf(P.Hd[0] + 50, P.Hd[1] - 30 - age * 50); // in front of the face, low enough to stay on canvas
+      if (i >= 0 && empty(i)) at(i, "\u2665", NOSE, Math.sin(age * Math.PI));
     }
 
     for (let i = 0; i < N; i++) {

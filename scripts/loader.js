@@ -3,17 +3,21 @@
 (() => {
 const { isNight, create, POSES, lerpRig, stretchAt } = window.AsciiCat;
 const asleep = isNight(); // 8pm-8am CT: the loading cat is asleep instead of stretching
-const draw = create(document.getElementById("loader-cat"), 46, 20); // 644x320 canvas
+// Phones get a canvas cropped to the cat (504px wide, not 644), so it fills the screen instead of shrinking.
+const mobile = innerWidth < 640, cols = mobile ? 36 : 46, catX = mobile ? 274 : 300;
+const canvas = document.getElementById("loader-cat");
+if (mobile) { canvas.style.width = "min(100vw, 504px)"; canvas.style.aspectRatio = "504 / 320"; }
+const draw = create(canvas, cols, 20);
 
 let raf;
 const start = performance.now();
 function frame(now) {
   const time = now - start;
   if (asleep) {
-    draw(POSES.sleep, time, { x: 300, ground: 296, zzz: true });
+    draw(POSES.sleep, time, { x: catX, ground: 296, zzz: true });
   } else { // head and tail trail the body through the stretch
     const rig = lerpRig(POSES.stand, POSES.stretch, stretchAt(time), stretchAt(time - 260), stretchAt(time - 520));
-    draw(rig, time, { x: 300, ground: 296, blink: time % 3100 > 2950 });
+    draw(rig, time, { x: catX, ground: 296, blink: time % 3100 > 2950 });
   }
   raf = requestAnimationFrame(frame);
 }
