@@ -346,5 +346,13 @@ function create(canvas, cols, rows, scale = 1) {
   };
 }
 
-return { create, POSES, lerpRig, stretchAt, walkRig, WALK_SPEED, CW, CH, GROUND, clamp, smooth };
+// Night in Central Time (8pm-8am). ?cathour=22 in the URL pretends it's that hour, for testing.
+const hourParam = new URLSearchParams(location.search).get("cathour");
+const ctHour = new Intl.DateTimeFormat("en-US", { timeZone: "America/Chicago", hour: "numeric", hourCycle: "h23" });
+function isNight() {
+  const h = hourParam !== null ? Number(hourParam) : Number(ctHour.format(new Date()));
+  return h >= 20 || h < 8;
+}
+
+return { isNight, create, POSES, lerpRig, stretchAt, walkRig, WALK_SPEED, CW, CH, GROUND, clamp, smooth };
 })();

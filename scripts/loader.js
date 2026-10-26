@@ -1,15 +1,20 @@
-// Loading screen: the shared ASCII cat (cat.js) stretching, stand -> play-bow -> stand.
+// Loading screen: the shared ASCII cat (cat.js): stretching by day (stand -> play-bow -> stand), asleep 8pm-8am CT.
 // Wrapped in a function so these names never collide with other scripts on the page.
 (() => {
-const { create, POSES, lerpRig, stretchAt } = window.AsciiCat;
+const { isNight, create, POSES, lerpRig, stretchAt } = window.AsciiCat;
+const asleep = isNight(); // 8pm-8am CT: the loading cat is asleep instead of stretching
 const draw = create(document.getElementById("loader-cat"), 46, 20); // 644x320 canvas
 
 let raf;
 const start = performance.now();
 function frame(now) {
-  const time = now - start; // head and tail trail the body through the stretch
-  const rig = lerpRig(POSES.stand, POSES.stretch, stretchAt(time), stretchAt(time - 260), stretchAt(time - 520));
-  draw(rig, time, { x: 300, ground: 296, blink: time % 3100 > 2950 });
+  const time = now - start;
+  if (asleep) {
+    draw(POSES.sleep, time, { x: 300, ground: 296, zzz: true });
+  } else { // head and tail trail the body through the stretch
+    const rig = lerpRig(POSES.stand, POSES.stretch, stretchAt(time), stretchAt(time - 260), stretchAt(time - 520));
+    draw(rig, time, { x: 300, ground: 296, blink: time % 3100 > 2950 });
+  }
   raf = requestAnimationFrame(frame);
 }
 raf = requestAnimationFrame(frame);

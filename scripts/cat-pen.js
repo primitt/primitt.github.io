@@ -1,16 +1,10 @@
 // The cat at the bottom of the main page, doing cat things on Central Time: curled up asleep from
 // 8pm to 8am, otherwise mostly lying down, sometimes sitting up, now and then a short walk or a stretch.
-// Uses the shared renderer in cat.js. Add ?cathour=22 to the URL to pretend it's that hour in CT.
+// Uses the shared renderer in cat.js, which also owns isNight() and the ?cathour= test override.
 (() => {
-const { create, POSES, lerpRig, stretchAt, walkRig, WALK_SPEED, CW, CH, GROUND, clamp, smooth } = window.AsciiCat;
+const { isNight, create, POSES, lerpRig, stretchAt, walkRig, WALK_SPEED, CW, CH, GROUND, clamp, smooth } = window.AsciiCat;
 const canvas = document.getElementById("cat-pen");
 
-const hourParam = new URLSearchParams(location.search).get("cathour");
-const ctHour = new Intl.DateTimeFormat("en-US", { timeZone: "America/Chicago", hour: "numeric", hourCycle: "h23" });
-const isNight = () => {
-  const h = hourParam !== null ? Number(hourParam) : Number(ctHour.format(new Date()));
-  return h >= 20 || h < 8;
-};
 let night = isNight();
 setInterval(() => { night = isNight(); }, 30000);
 
@@ -26,7 +20,8 @@ function resize() {
   width = cols * CW;
   ground = rows * CH - 22;
   margin = 300 * scale; // the cat reaches about 300 cat-space px either side of its middle
-  x = clamp(x ?? width / 2, margin, Math.max(margin, width - margin));
+  const lo = margin, hi = Math.max(margin, width - margin);
+  x = clamp(x ?? lo + Math.random() * (hi - lo), lo, hi); // random spot on load, kept across resizes
 }
 resize();
 new ResizeObserver(resize).observe(canvas.parentElement);
