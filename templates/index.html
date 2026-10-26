@@ -95,9 +95,28 @@
   .flight-popup .mapboxgl-popup-tip {
     border-top-color: #111827 !important;
   }
+
+  #loader {
+    transition: opacity 0.5s ease;
+  }
+
+  #loader-cat {
+    display: block;
+    width: min(92vw, 644px);
+    aspect-ratio: 644 / 320;
+  }
 </style>
+<noscript><style>#loader { display: none; }</style></noscript>
 
 <body>
+  <div id="loader" class="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-6 bg-black">
+    <canvas id="loader-cat" aria-hidden="true"></canvas>
+    <p class="text-sm text-gray-500 font-mono" role="status">loading...</p>
+    <!-- Failsafe that doesn't depend on loader.js, in case it's blocked or errors -->
+    <script>setTimeout(function () { var l = document.getElementById("loader"); if (l) l.remove(); document.body.style.overflow = ""; }, 10000);</script>
+    <script src="./scripts/cat.js"></script>
+    <script src="./scripts/loader.js"></script>
+  </div>
   <div id="particles-js" class="background"></div>
   
   <div class="container mx-auto px-4 pb-8 max-w-7xl">
@@ -333,6 +352,11 @@
         </div>
       </div>
     </div>
+    <div class="mt-5">
+      <canvas id="cat-pen" class="block mx-auto" aria-hidden="true"></canvas>
+      <p class="text-center text-sm text-gray-500 font-mono mt-2">fly, kitty...fly!</p>
+    </div>
+    <script src="./scripts/cat-pen.js"></script>
   </div>
   <div id="blogspage-expanded" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm">
     <div class="w-full h-full bg-base-200 shadow-2xl border border-gray-600 flex flex-col">
@@ -616,9 +640,12 @@
     }
   }
   typePhrase();
-  particlesJS.load("particles-js", "scripts/particles.json", function () {
-    console.log("callback - particles.js config loaded");
-  });
+  // Ad blockers can block particles.min.js; don't let that abort the rest of this script.
+  if (typeof particlesJS !== "undefined") {
+    particlesJS.load("particles-js", "scripts/particles.json", function () {
+      console.log("callback - particles.js config loaded");
+    });
+  }
   function updateSpotifyStatus() {
     fetch('/api/spotify/current-track')
       .then(response => response.json())
@@ -741,7 +768,7 @@
   }
 
   function loadFlightsData() {
-    loadAirportDatabase().then(() => {
+    return loadAirportDatabase().then(() => {
       return fetch('/scripts/flight_info.csv');
     })
       .then(response => response.text())
@@ -1077,7 +1104,7 @@
     `;
   }
 
-  loadFlightsData();
+  hideLoader(loadFlightsData());
 </script>
 
 </html>
