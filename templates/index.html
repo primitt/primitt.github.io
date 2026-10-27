@@ -225,23 +225,25 @@
             <p class="text-sm text-gray-500">Most recent projects shown... click "expand" to see them all</p>
           </div>
 
+          {# status id -> label, badge classes, icon, sort rank (active first, then in progress, ...) #}
+          {% set STATUS = {
+            1: ("In Progress", "badge-warning", "fa-clock", 2),
+            2: ("Completed", "badge-success", "fa-check", 3),
+            3: ("Not Maintained", "badge-ghost", "fa-archive", 5),
+            4: ("Inactive", "badge-primary", "fa-pause", 4),
+            5: ("Active", "badge-success badge-outline", "fa-play", 1),
+          } %}
           {% for project in projects[:3] %}
-          <div class="flex">
-            <a class="bold font-bold">{{ project.name }}</a>&nbsp;-<span>
-              &nbsp;{{ project.description }}
-              <br /><span class="text-gray-500">{{ project.date }}
-                {% if project.status == 1 %}
-                <div class="badge badge-warning badge-soft">In Progress</div>
-                {% elif project.status == 2 %}
-                <div class="badge badge-success">Completed</div>
-                {% elif project.status == 3 %}
-                <div class="badge">Not Maintained</div>
-                {% elif project.status == 4 %}
-                <div class="badge badge-primary">Inactive</div>
-                {% elif project.status == 5 %}
-                <div class="badge badge-success badge-soft">Active</div>
-                {% endif %}
-              </span> </span><br />
+          {% set st = STATUS.get(project.status) %}
+          <div class="border-l-4 border-blue-500 pl-3 mb-3">
+            <div class="flex items-start justify-between gap-2">
+              <h3 class="font-semibold text-white">{{ project.name }}</h3>
+              {% if st %}<div class="badge badge-sm shrink-0 {{ st[1] }}">{{ st[0] }}</div>{% endif %}
+            </div>
+            {% if project.description %}
+            <p class="text-sm text-gray-400">{{ project.description }}</p>
+            {% endif %}
+            <span class="text-xs text-gray-500">{{ project.date }}</span>
           </div>
           {% endfor %}
         </div>
@@ -443,9 +445,30 @@
 
       <div class="flex-1 overflow-auto p-6 bg-base-200">
         <div class="max-w-6xl mx-auto">
-          <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <div id="project-filters" class="flex flex-wrap gap-2">
+              <button class="btn btn-xs btn-active" data-status="all">All</button>
+              {% set present = projects | map(attribute='status') | list %}
+              {% for sid, st in STATUS.items() | sort(attribute='1.3') if sid in present %}
+              <button class="btn btn-xs btn-outline" data-status="{{ sid }}">{{ st[0] }}</button>
+              {% endfor %}
+            </div>
+            <div class="flex items-center gap-3 text-xs text-gray-400">
+              <span id="project-count">{{ projects | length }} projects</span>
+              <select id="project-sort" class="select select-bordered select-xs" aria-label="Sort projects">
+                <option value="newest">Newest first</option>
+                <option value="oldest">Oldest first</option>
+                <option value="name">Name (A-Z)</option>
+                <option value="status">Status</option>
+              </select>
+            </div>
+          </div>
+          <div id="project-grid" class="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
             {% for project in projects %}
-            <div
+            {% set st = STATUS.get(project.status) %}
+            <div data-status="{{ project.status }}" data-id="{{ project.id }}" data-name="{{ project.name }}"
+              data-start="{{ project.date.split('-')[0] }}" data-end="{{ project.date.split('-')[-1] }}"
+              data-rank="{{ st[3] if st else 9 }}"
               class="card bg-base-300 shadow-lg border border-gray-600 hover:shadow-xl transition-shadow duration-200">
               <div class="card-body p-4">
                 <div class="flex items-start justify-between mb-3">
@@ -457,30 +480,10 @@
 
                 <div class="flex items-center justify-between">
                   <div>
-                    {% if project.status == 1 %}
-                    <div class="badge badge-warning gap-1">
-                      <i class="fas fa-clock text-xs"></i>
-                      In Progress
-                    </div>
-                    {% elif project.status == 2 %}
-                    <div class="badge badge-success gap-1">
-                      <i class="fas fa-check text-xs"></i>
-                      Completed
-                    </div>
-                    {% elif project.status == 3 %}
-                    <div class="badge badge-ghost gap-1">
-                      <i class="fas fa-archive text-xs"></i>
-                      Not Maintained
-                    </div>
-                    {% elif project.status == 4 %}
-                    <div class="badge badge-primary gap-1">
-                      <i class="fas fa-pause text-xs"></i>
-                      Inactive
-                    </div>
-                    {% elif project.status == 5 %}
-                    <div class="badge badge-success badge-outline gap-1">
-                      <i class="fas fa-play text-xs"></i>
-                      Active
+                    {% if st %}
+                    <div class="badge gap-1 {{ st[1] }}">
+                      <i class="fas {{ st[2] }} text-xs"></i>
+                      {{ st[0] }}
                     </div>
                     {% endif %}
                   </div>
@@ -572,6 +575,35 @@
         document.body.style.overflow = '';
       }
     }
+
+    // Sorting and status filter for the expanded projects view: reorder and hide the server-rendered cards.
+    const projectGrid = document.getElementById('project-grid');
+    const projectCards = [...projectGrid.children];
+    let projectStatus = 'all';
+    const projectSorts = {
+      newest: (a, b) => b.dataset.end - a.dataset.end || b.dataset.id - a.dataset.id,
+      oldest: (a, b) => a.dataset.start - b.dataset.start || a.dataset.id - b.dataset.id,
+      name: (a, b) => a.dataset.name.localeCompare(b.dataset.name, undefined, { sensitivity: 'base' }),
+      status: (a, b) => a.dataset.rank - b.dataset.rank || projectSorts.newest(a, b),
+    };
+    function updateProjects() {
+      let shown = 0;
+      projectCards.sort(projectSorts[document.getElementById('project-sort').value]).forEach(card => {
+        const show = projectStatus === 'all' || card.dataset.status === projectStatus;
+        card.classList.toggle('hidden', !show);
+        shown += show;
+        projectGrid.appendChild(card);
+      });
+      document.getElementById('project-count').textContent = shown + (shown === 1 ? ' project' : ' projects');
+    }
+    document.getElementById('project-sort').addEventListener('change', updateProjects);
+    document.getElementById('project-filters').addEventListener('click', e => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      projectStatus = btn.dataset.status;
+      document.querySelectorAll('#project-filters button').forEach(b => b.classList.toggle('btn-active', b === btn));
+      updateProjects();
+    });
 
     function toggleBlogsExpand() {
       const expanded = document.getElementById('blogspage-expanded');

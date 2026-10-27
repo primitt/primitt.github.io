@@ -120,7 +120,8 @@ def spotify_current_track():
 @app.route("/")
 def index():
     projects = Projects.select()
-    projects = sorted(projects, key=lambda x: int(x.date.split("-")[0]), reverse=True)
+    # Newest first by the year a project last ran ("2023-2025" counts as 2025); ties go to the most recently added.
+    projects = sorted(projects, key=lambda x: (int(x.date.split("-")[-1]), x.id), reverse=True)
     blogs = Blogs.select()
     photos = Photography.select().order_by(Photography.id.desc()).limit(4)
     return render_template('index.html', projects=projects, blogs=blogs, photos=photos)
