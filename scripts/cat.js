@@ -358,12 +358,17 @@ function create(canvas, cols, rows, scale = 1) {
   };
 }
 
-// Night in Central Time (8pm-8am). ?cathour=22 in the URL pretends it's that hour, for testing.
+// Night in Central Time (8pm-8am). ?cathour=22 or ?cathour=7:59 in the URL pretends it's that time, for testing;
+// the pretend clock keeps running from there, so 7:59 turns into 8:00 (and the cat wakes up) a minute after load.
 const hourParam = new URLSearchParams(location.search).get("cathour");
-const ctHour = new Intl.DateTimeFormat("en-US", { timeZone: "America/Chicago", hour: "numeric", hourCycle: "h23" });
+const [fakeH, fakeM = 0] = (hourParam ?? "").split(":").map(Number);
+const ctTime = new Intl.DateTimeFormat("en-US", { timeZone: "America/Chicago", hour: "numeric", minute: "numeric", hourCycle: "h23" });
 function isNight() {
-  const h = hourParam !== null ? Number(hourParam) : Number(ctHour.format(new Date()));
-  return h >= 20 || h < 8;
+  let m;
+  if (hourParam !== null && !isNaN(fakeH)) m = fakeH * 60 + fakeM + performance.now() / 60000;
+  else { const [h, min] = ctTime.format(new Date()).split(":").map(Number); m = h * 60 + min; }
+  m %= 1440;
+  return m >= 1200 || m < 480;
 }
 
 return { isNight, create, POSES, lerpRig, stretchAt, walkRig, WALK_SPEED, CW, CH, GROUND, clamp, smooth };
