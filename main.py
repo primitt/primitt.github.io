@@ -125,6 +125,10 @@ def index():
     photos = Photography.select().order_by(Photography.id.desc()).limit(4)
     return render_template('index.html', projects=projects, blogs=blogs, photos=photos)
 
+@app.route("/cat")
+def cat():
+    return render_template('cat.html')
+
 @app.route('/images/<name>')
 def images(name):
     return send_from_directory('templates/images', name)

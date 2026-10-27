@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kitty</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #000; }
+    #stage { min-height: 100%; display: flex; align-items: center; justify-content: center; }
+    #pen { width: 100%; }
+    #cat-pen { display: block; margin: 0 auto; }
+  </style>
+</head>
+
+<body>
+  <div id="stage">
+    <div id="pen"><canvas id="cat-pen" aria-hidden="true"></canvas></div>
+  </div>
+  <script src="./scripts/cat.js"></script>
+  <script src="./scripts/cat-pen.js"></script>
+</body>
+
+</html>
