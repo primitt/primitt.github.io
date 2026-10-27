@@ -4,7 +4,9 @@
 const { isNight, create, POSES, lerpRig, stretchAt } = window.AsciiCat;
 const asleep = isNight(); // 8pm-8am CT: the loading cat is asleep instead of stretching
 // Phones get a canvas cropped to the cat (504px wide, not 644), so it fills the screen instead of shrinking.
-const mobile = innerWidth < 640, cols = mobile ? 36 : 46, catX = mobile ? 274 : 300;
+const mobile = innerWidth < 640, cols = mobile ? 36 : 46;
+// Cat-space middle that centres the drawn cat in the canvas (measured; the curled-up and stretching cats differ).
+const catX = mobile ? (asleep ? 227 : 269) : (asleep ? 308 : 337);
 const canvas = document.getElementById("loader-cat");
 if (mobile) { canvas.style.width = "min(100vw, 504px)"; canvas.style.aspectRatio = "504 / 320"; }
 const draw = create(canvas, cols, 20);
