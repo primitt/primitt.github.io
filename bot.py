@@ -298,6 +298,23 @@ async def delete_photography(
     photography_entry.delete_instance()
     await interaction.response.send_message(f"Photography entry {photography_id} - '{photography_entry.series}' deleted successfully.")
 
+@bot.slash_command(name="edit_photography", description="Edit a photography entry's description by ID")
+async def edit_photography(
+    interaction,
+    photography_id: int,
+    small_desc: str
+):
+    if not await require_admin(interaction):
+        return
+    photography_entry = Photography.get_or_none(Photography.id == photography_id)
+    if not photography_entry:
+        await interaction.response.send_message(f"Photography entry with ID {photography_id} not found.")
+        return
+
+    photography_entry.small_desc = small_desc
+    photography_entry.save()
+    await interaction.response.send_message(f"Photography entry {photography_id} - '{photography_entry.series}' description updated.")
+
 @bot.slash_command(name="list_photography", description="List all photography entries by series")
 async def list_photography(
     interaction,
